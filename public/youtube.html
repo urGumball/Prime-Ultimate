@@ -1,11 +1,28 @@
-<html>
-    <head>
-        <title>Youtube</title>
-        <link rel="stylesheet" href="youtube.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <h1>Youtube</h1>
-        <p>Welcome to Youtube!</p>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP Youtube!</title>
+</head>
+<body>
+
+    <div class="video-wrapper">
+        <!-- Channel Profile Header -->
+        <div id="channel-header" class="channel-header">
+            <img id="channel-icon" src="" alt="Channel Icon" style="display:none;">
+            <h2 id="channel-title">Loading Channel...</h2>
+        </div>
+
+        <!-- Embedded Video Player (Plays on site) -->
+        <div class="player-container">
+            <iframe id="main-player" src="" allowfullscreen></iframe>
+        </div>
+
+        <!-- Video Selection Grid -->
+        <div id="video-container" class="video-grid">
+            <p style="font-size: 0.9rem; color: #888;">Loading videos...</p>
+        </div>
+    </div>
+</body>
 </html>
