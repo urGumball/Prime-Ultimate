@@ -1,28 +1,1241 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTTP Youtube!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <title>FoursTube 4S</title>
+    <style>
+        * { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #000 url('https://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; color: #fff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 8px; }
+        
+        .header {
+            background: -webkit-gradient(linear, left top, left bottom, from(#b0b9c6), color-stop(0.05, #8e9cb0), color-stop(0.5, #6d7d93), color-stop(0.51, #57677d), to(#4d5c71));
+            border-bottom: 1px solid #2e3540;
+            padding: 8px 10px;
+            border-radius: 6px 6px 0 0;
+            -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+            margin-bottom: 8px;
+        }
+        .header h1 { font-size: 15px; text-shadow: 0 -1px 0 #222; text-align: center; color: #fff; }
+
+        .control-bar { text-align: center; margin-bottom: 8px; }
+
+        .btn-ios {
+            display: inline-block;
+            padding: 5px 7px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 -1px 0 #000;
+            background: -webkit-gradient(linear, left top, left bottom, from(#6d7d93), color-stop(0.5, #4c586c), color-stop(0.51, #3b4657), to(#2d3644));
+            border: 1px solid #1f2530;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 1px 2px rgba(0,0,0,0.5);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 1px 2px rgba(0,0,0,0.5);
+            cursor: pointer;
+            margin: 1px;
+        }
+        .btn-ios.active {
+            background: -webkit-gradient(linear, left top, left bottom, from(#4bd84b), to(#158c15));
+            border-color: #050;
+        }
+        .btn-ios.danger {
+            background: -webkit-gradient(linear, left top, left bottom, from(#d84b4b), to(#8c1515));
+            border-color: #500;
+        }
+        .btn-ios.admin-btn {
+            background: -webkit-gradient(linear, left top, left bottom, from(#a04bd8), to(#58158c));
+            border-color: #3b0550;
+        }
+
+        .search-box { margin-bottom: 8px; }
+        .search-input { width: 72%; padding: 6px; background: #fff; border: 1px solid #333; font-size: 12px; border-radius: 4px; color:#000; }
+        .btn-search {
+            width: 24%; float: right; padding: 6px;
+            background: -webkit-gradient(linear, left top, left bottom, from(#d84b4b), to(#8c1515));
+            border-color: #500;
+        }
+
+        .player-wrap { width: 100%; height: 200px; background: #000; margin-bottom: 8px; display: none; border: 1px solid #444; border-radius: 6px; }
+        iframe { width: 100%; height: 100%; border: none; border-radius: 6px; }
+
+        .section-header { font-size: 12px; font-weight: bold; color: #fff; text-shadow: 0 1px 1px #000; margin: 10px 0 4px 2px; }
+
+        /* User Profile Ribbon */
+        .user-bar { background: #1c222d; border: 1px solid #3b4657; border-radius: 6px; padding: 6px 8px; margin-bottom: 8px; display: -webkit-box; -webkit-box-align: center; }
+        .user-clickable { display: -webkit-box; -webkit-box-align: center; -webkit-box-flex: 1; cursor: pointer; }
+        .user-avatar { width: 32px; height: 32px; border-radius: 16px; margin-right: 8px; border: 1px solid #aaa; background: #555; object-fit: cover; }
+        .user-info { -webkit-box-flex: 1; font-size: 11px; }
+        .user-handle { font-size: 9px; color: #aaa; }
+        .admin-badge { background: #900c3f; color: #fff; font-size: 8px; font-weight: bold; padding: 1px 4px; border-radius: 3px; margin-left: 4px; display: inline-block; }
+
+        /* Video Lists */
+        .list-container { background: #fff; border-radius: 6px; border: 1px solid #999; overflow: hidden; margin-bottom: 8px; }
+        .card { padding: 8px; border-bottom: 1px solid #e0e0e0; cursor: pointer; color: #000; background: #fff; }
+        .card:last-child { border-bottom: none; }
+        .card:active { background: #0275d8; color: #fff; }
+        .card img { width: 76px; height: 50px; float: left; margin-right: 8px; border-radius: 3px; background: #222; object-fit: cover; }
+        .card-title { font-size: 11px; font-weight: bold; line-height: 1.25; height: 28px; overflow: hidden; }
+        .card-meta { font-size: 9px; color: #666; margin-top: 3px; }
+        .card:active .card-meta { color: #ddd; }
+
+        /* Shorts Grid */
+        .shorts-container { display: -webkit-box; overflow-x: auto; margin-bottom: 8px; padding-bottom: 6px; }
+        .short-card { width: 95px; margin-right: 6px; background: #fff; color: #000; border-radius: 6px; padding: 4px; border: 1px solid #999; cursor: pointer; }
+        .short-card img { width: 100%; height: 115px; border-radius: 4px; object-fit: cover; background: #222; }
+        .short-title { font-size: 9px; font-weight: bold; height: 32px; overflow: hidden; margin-top: 4px; line-height: 1.15; word-wrap: break-word; }
+
+        /* Comments Box */
+        .comments-section { background: #fff; color: #000; border-radius: 6px; padding: 8px; margin-top: 8px; border: 1px solid #999; }
+        .comment-item { padding: 5px 0; border-bottom: 1px solid #eee; font-size: 10px; }
+        .comment-item:last-child { border-bottom: none; }
+        .comment-author { font-weight: bold; color: #0275d8; }
+        .comment-input { width: 70%; padding: 4px; font-size: 11px; border: 1px solid #ccc; border-radius: 3px; }
+
+        /* Skeleton Loading UI */
+        .skeleton-card { padding: 8px; border-bottom: 1px solid #eee; background: #fff; }
+        .sk-thumb { width: 76px; height: 50px; float: left; background: #e0e0e0; border-radius: 3px; }
+        .sk-line { height: 10px; background: #e0e0e0; margin-bottom: 6px; border-radius: 2px; }
+        .sk-line.short { width: 50%; }
+        .sk-body { margin-left: 84px; }
+
+        /* iOS 5 Modals */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7); display: none; -webkit-box-pack: center; -webkit-box-align: center;
+            z-index: 999; padding: 12px;
+        }
+        .modal-card {
+            background: #2d3644; border: 1px solid #57677d; border-radius: 8px;
+            width: 100%; max-width: 320px; max-height: 85vh; overflow-y: auto;
+            padding: 10px; -webkit-box-shadow: 0 4px 15px rgba(0,0,0,0.8); color: #fff;
+        }
+        .modal-header { font-size: 14px; font-weight: bold; text-align: center; margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 6px; }
+        .modal-item { background: #fff; color: #000; padding: 8px; border-radius: 4px; margin-bottom: 6px; font-size: 11px; cursor: pointer; }
+        .modal-item:active { background: #0275d8; color: #fff; }
+        .modal-input { width: 100%; padding: 6px; font-size: 12px; margin-bottom: 8px; border-radius: 4px; border: 1px solid #ccc; color: #000; }
+        .modal-label { font-size: 10px; color: #aaa; margin-bottom: 4px; text-align: center; }
+
+        /* Centered Default PFP Picker Grid */
+        .pfp-picker {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-pack: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            -webkit-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            padding-bottom: 4px;
+        }
+        .pfp-opt {
+            width: 44px; height: 44px;
+            border-radius: 22px;
+            border: 2px solid #555;
+            margin: 4px;
+            cursor: pointer;
+            object-fit: cover;
+            background: #111;
+        }
+        .pfp-opt.selected { border-color: #4bd84b; -webkit-box-shadow: 0 0 8px #4bd84b; }
+
+        .profile-view { text-align: center; margin-bottom: 10px; }
+        .profile-view img { width: 64px; height: 64px; border-radius: 32px; border: 2px solid #fff; margin: 0 auto 6px auto; display: block; object-fit: cover; }
+        .history-box { max-height: 140px; overflow-y: auto; background: #fff; border-radius: 4px; color: #000; font-size: 10px; }
+
+        .clear { clear: both; }
+    </style>
 </head>
 <body>
 
-    <div class="video-wrapper">
-        <!-- Channel Profile Header -->
-        <div id="channel-header" class="channel-header">
-            <img id="channel-icon" src="" alt="Channel Icon" style="display:none;">
-            <h2 id="channel-title">Loading Channel...</h2>
-        </div>
+    <div class="header">
+        <h1>FoursTube 4S</h1>
+    </div>
 
-        <!-- Embedded Video Player (Plays on site) -->
-        <div class="player-container">
-            <iframe id="main-player" src="" allowfullscreen></iframe>
+    <!-- User Profile Bar -->
+    <div class="user-bar" id="userBar">
+        <div class="user-clickable" onclick="openChannelProfile()">
+            <img class="user-avatar" id="uAvatar" src="">
+            <div class="user-info">
+                <div><span id="uName" style="font-weight:bold;">Guest Channel</span><span id="uAdminTag" class="admin-badge" style="display:none;">ADMIN</span></div>
+                <div id="uHandle" class="user-handle">@guest • ID: #1</div>
+            </div>
         </div>
+        <button class="btn-ios" onclick="openModal('accModal')">Accounts</button>
+        <button class="btn-ios" onclick="openModal('settingsModal')">Settings</button>
+    </div>
 
-        <!-- Video Selection Grid -->
-        <div id="video-container" class="video-grid">
-            <p style="font-size: 0.9rem; color: #888;">Loading videos...</p>
+    <div class="control-bar">
+        <button class="btn-ios" id="btnApi" onclick="toggleApi()">API: Key 1</button>
+        <button class="btn-ios" id="btnSaver" onclick="toggleSaver()">Saver: OFF</button>
+        <button class="btn-ios" id="btnLock" onclick="handleLockClick()">Locked API</button>
+        <button class="btn-ios admin-btn" id="btnAdminPanel" style="display:none;" onclick="openAdminPanel()">Admin Panel</button>
+        <a href="index.html" class="btn-ios" style="text-decoration:none;">Home</a>
+    </div>
+
+    <div id="playerWrap" class="player-wrap">
+        <iframe id="ytPlayer" src="" allowfullscreen></iframe>
+    </div>
+
+    <form class="search-box" onsubmit="doSearch(event)">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search YouTube..." required>
+        <button type="submit" class="btn-ios btn-search">Search</button>
+        <div class="clear"></div>
+    </form>
+
+    <div id="status" style="font-size:10px; color:#aaa; margin-bottom:6px; text-align:center;"></div>
+
+    <div id="contentArea"></div>
+
+    <!-- Modal 1: Accounts Menu -->
+    <div class="modal-overlay" id="accModal">
+        <div class="modal-card">
+            <div class="modal-header">Channel Manager</div>
+            <div id="accList"></div>
+            <button class="btn-ios active" style="width:100%; padding:8px; margin-bottom:6px;" onclick="openModal('createModal')">+ Create New Channel</button>
+            <button class="btn-ios" style="width:100%; padding:6px;" onclick="closeModal('accModal')">Close</button>
         </div>
     </div>
+
+    <!-- Modal 2: Create Channel -->
+    <div class="modal-overlay" id="createModal">
+        <div class="modal-card">
+            <div class="modal-header">Create Channel</div>
+            <div class="modal-label">Channel Name</div>
+            <input type="text" id="cNameInput" class="modal-input" placeholder="Channel Name">
+            <div class="modal-label">Handle (min 3 chars, letters/numbers only)</div>
+            <input type="text" id="cHandleInput" class="modal-input" placeholder="e.g. techguy4s">
+            
+            <div class="modal-label">Select Default Profile Picture</div>
+            <div class="pfp-picker" id="pfpPickerRow"></div>
+
+            <!-- Custom PFP Mode Toggle -->
+            <div style="text-align: center; margin: 6px 0;">
+                <button type="button" class="btn-ios" id="btnTogglePfpMode" onclick="togglePfpInputMode('create')">Switch to File Upload</button>
+            </div>
+
+            <!-- URL Mode -->
+            <div id="pfpUrlGroup">
+                <div class="modal-label">PFP Image Link</div>
+                <input type="text" id="cPfpInput" class="modal-input" placeholder="https://...">
+            </div>
+
+            <!-- File Upload Explorer Mode -->
+            <div id="pfpFileGroup" style="display:none;">
+                <div class="modal-label">Choose Image from Device</div>
+                <input type="file" id="cFileInput" class="modal-input" accept="image/*" onchange="handleFileUpload(event, 'create')">
+            </div>
+
+            <div class="modal-label">Channel Password (Optional)</div>
+            <input type="password" id="cPassInput" class="modal-input" placeholder="Password">
+            <button class="btn-ios active" style="width:100%; padding:8px; margin-bottom:6px;" onclick="submitNewChannel()">Create</button>
+            <button class="btn-ios" style="width:100%; padding:6px;" onclick="closeModal('createModal')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Modal 3: Password Prompt -->
+    <div class="modal-overlay" id="passModal">
+        <div class="modal-card">
+            <div class="modal-header" id="passPromptTitle">Enter Password</div>
+            <div id="passPromptSub" style="font-size:10px; color:#aaa; text-align:center; margin-bottom:8px;"></div>
+            <input type="password" id="passModalInput" class="modal-input" placeholder="Password">
+            <button class="btn-ios active" style="width:100%; padding:8px; margin-bottom:6px;" onclick="submitPassModal()">Unlock</button>
+            <button class="btn-ios" style="width:100%; padding:6px;" onclick="closeModal('passModal')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Modal 4: Channel Profile Page -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-card">
+            <div class="modal-header">My Channel</div>
+            <div class="profile-view">
+                <img id="profPic" src="">
+                <div id="profTitle" style="font-weight:bold; font-size:13px;"></div>
+                <div id="profHandle" style="font-size:10px; color:#aaa;"></div>
+                <div id="profCreated" style="font-size:9px; color:#888; margin-top:2px;"></div>
+            </div>
+            <div class="section-header">Watch History</div>
+            <div class="history-box" id="profHistoryList"></div>
+            <button class="btn-ios" id="profBadgeToggleBtn" style="width:100%; padding:6px; margin-top:8px; display:none;" onclick="toggleMyBadge()">Remove Admin Status</button>
+            <button class="btn-ios" style="width:100%; padding:6px; margin-top:4px;" onclick="closeModal('profileModal')">Close</button>
+        </div>
+    </div>
+
+    <!-- Modal 5: Settings Menu -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-card">
+            <div class="modal-header">Channel Settings</div>
+            <div class="modal-item" onclick="settingChangeName()">1. Change Channel Name</div>
+            <div class="modal-item" onclick="settingChangeHandle()">2. Change Channel Handle</div>
+            <div class="modal-item" onclick="openModal('editPfpModal')">3. Change Profile Picture</div>
+            <div class="modal-item" onclick="settingChangePass()">4. Change Password</div>
+            <div class="modal-item" onclick="settingToggleGoogle()">5. Toggle Linked Google Account</div>
+            <div class="modal-item" onclick="settingResetHistory()">6. Reset Watch History & FYP</div>
+            <div class="modal-item" onclick="settingClearComments()">7. Clear Saved Local Comments</div>
+            <div class="modal-item" onclick="settingClearCache()">8. Clear Temporary Cache</div>
+            <div class="modal-item" onclick="settingResetLockouts()">9. Reset Security Lockouts</div>
+            <div class="modal-item" onclick="settingToggleAutoPlay()">10. Toggle Saver Mode</div>
+            <div class="modal-item" onclick="settingExportProfile()">11. View Account Metadata</div>
+            <div class="modal-item" style="background:#d84b4b; color:#fff;" onclick="settingDeleteAccount()">12. Delete Current Channel</div>
+            <button class="btn-ios" style="width:100%; padding:6px; margin-top:6px;" onclick="closeModal('settingsModal')">Close Settings</button>
+        </div>
+    </div>
+
+    <!-- Modal 5.5: Edit PFP Modal -->
+    <div class="modal-overlay" id="editPfpModal">
+        <div class="modal-card">
+            <div class="modal-header">Change Profile Picture</div>
+            
+            <div class="modal-label">Select Default Profile Picture</div>
+            <div class="pfp-picker" id="editPfpPickerRow"></div>
+
+            <!-- Custom PFP Mode Toggle -->
+            <div style="text-align: center; margin: 6px 0;">
+                <button type="button" class="btn-ios" id="btnToggleEditPfpMode" onclick="togglePfpInputMode('edit')">Switch to File Upload</button>
+            </div>
+
+            <!-- URL Mode -->
+            <div id="editPfpUrlGroup">
+                <div class="modal-label">Or PFP Image Link</div>
+                <input type="text" id="editPfpInput" class="modal-input" placeholder="https://...">
+            </div>
+
+            <!-- File Upload Explorer Mode -->
+            <div id="editPfpFileGroup" style="display:none;">
+                <div class="modal-label">Or Choose Image from Device</div>
+                <input type="file" id="editFileInput" class="modal-input" accept="image/*" onchange="handleFileUpload(event, 'edit')">
+            </div>
+
+            <button class="btn-ios active" style="width:100%; padding:8px; margin-bottom:6px;" onclick="saveSettingPfp()">Save Picture</button>
+            <button class="btn-ios" style="width:100%; padding:6px;" onclick="closeModal('editPfpModal')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Modal 6: Admin Suite -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal-card">
+            <div class="modal-header">Admin Suite (matt-djs-24)</div>
+            <button class="btn-ios active" style="width:100%; padding:6px; margin-bottom:6px;" onclick="adminGenerateFakes()">+ Spawn 3 Demo Channels</button>
+            <div class="modal-label">Channel Controls (Click to manage):</div>
+            <div id="adminAccList"></div>
+            <button class="btn-ios danger" style="width:100%; padding:6px; margin-top:6px;" onclick="adminClearAll()">Clear All Accounts</button>
+            <button class="btn-ios" style="width:100%; padding:6px; margin-top:6px;" onclick="closeModal('adminModal')">Exit Admin</button>
+        </div>
+    </div>
+
+    <script>
+        var ENC_KEYS = [
+            "QUl6YVN5QW1BR2J3ZnNQZGNEcGYtVjRydU9XUG9QOHdHR1dxRXJF",
+            "QUl6YVN5RDI1dndmcGVCblBmU3BSLUExU1dyaUdkMW5aMUNYOWxJ",
+            "QUl6YVN5QWIwdFRkSWoxODlGY2lvN3I0ZjF5SkxGWE8xN3VNemhj"
+        ];
+        
+        var SESSION_PASSCODE = "hoqzem-zikqof-42!Rofk";
+        var ADMIN_PASSCODE   = "matt-djs-24";
+
+        var decryptedKeys = [];
+        var activeKeyIndex = 1;
+        var saverMode = false;
+        var activeVideoId = null;
+        var pendingTargetAccIndex = null;
+        var passAttempts = 0;
+
+        var currentPfpMode = "url";
+        var currentEditPfpMode = "url";
+        var uploadedCustomPfp = "";
+        var uploadedEditCustomPfp = "";
+
+        // Requested Default Profile Picture URLs
+        var DEFAULT_PFPS = [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages-wixmp-ed30a86b8c4ca887773594c2.wixmp.com%2Ff%2F93cb2394-db3d-4c6f-8393-d493a2aa1323%2Fdgaqbd4-f7021eed-3a60-46fe-bc56-1f63326adb1a.png%3Ftoken%3DeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzkzY2IyMzk0LWRiM2QtNGM2Zi04MzkzLWQ0OTNhMmFhMTMyM1wvZGdhcWJkNC1mNzAyMWVlZC0zYTYwLTQ2ZmUtYmM1Ni0xZjYzMzI2YWRiMWEucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.5H7yauAX4aEvhPqzrVhNJTd5Y5SoGzZouG_lNg22in8&f=1&nofb=1&ipt=55942260a5c9de8c7fb339ad9350da9f6a5a4c84d324931ccb20b18ccaa29817&ipo=images",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2F736x%2F8b%2F0f%2Fd0%2F8b0fd0bd8c61d0914157a9e88cf8c02f.jpg&f=1&nofb=1&ipt=ef4589c34c8eefd03d3eb4daac80e7042601884a5a574b71ed24d50959ee2d3b&ipo=images",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.asiamediajournal.com%2Fwp-content%2Fuploads%2F2022%2F11%2FMorty-Smith-PFP-For-Tiktok-696x698.jpg&f=1&nofb=1&ipt=7be47918d4ceb68f15fcc0fe714c67088eac5be394f7a421b5f298c552e9062f&ipo=images",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fm.gettywallpapers.com%2Fwp-content%2Fuploads%2F2023%2F09%2FMorty-Smith-pfp.jpg&f=1&nofb=1&ipt=4cb37ae81581b0b36d6b2025302eede6fbd315d18fe0ed9e2e4d09c119a8e09a&ipo=images",
+            "https://wallpaperaccess.com/full/9088142.jpg"
+        ];
+        var selectedDefaultPfp = DEFAULT_PFPS[0];
+        var selectedEditDefaultPfp = DEFAULT_PFPS[0];
+
+        var DEFAULT_CREATORS = ["Channel Ramble", "EdmondX", "Zachary Stains", "MetraByte", "Jiga Tech"];
+        var FALLBACK_VIDEOS = [
+            { id: 'dQw4w9WgXcQ', title: 'iPhone 4S iOS 5.0.1 Setup Guide', creator: 'Project 4S', views: '1.2M views' },
+            { id: '9bZkp7q19f0', title: 'Retro Web Development Essentials', creator: 'Vintage Tech', views: '450K views' }
+        ];
+
+        function openModal(id) {
+            document.getElementById(id).style.display = '-webkit-box';
+            if (id === 'accModal') renderAccountList();
+            if (id === 'createModal') renderPfpPicker();
+            if (id === 'editPfpModal') renderEditPfpPicker();
+        }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function togglePfpInputMode(context) {
+            if (context === 'create') {
+                var btn = document.getElementById('btnTogglePfpMode');
+                var urlGroup = document.getElementById('pfpUrlGroup');
+                var fileGroup = document.getElementById('pfpFileGroup');
+
+                if (currentPfpMode === "url") {
+                    currentPfpMode = "file";
+                    urlGroup.style.display = "none";
+                    fileGroup.style.display = "block";
+                    btn.innerText = "Switch to Image URL";
+                } else {
+                    currentPfpMode = "url";
+                    fileGroup.style.display = "none";
+                    urlGroup.style.display = "block";
+                    btn.innerText = "Switch to File Upload";
+                }
+            } else if (context === 'edit') {
+                var btnEdit = document.getElementById('btnToggleEditPfpMode');
+                var editUrlGroup = document.getElementById('editPfpUrlGroup');
+                var editFileGroup = document.getElementById('editPfpFileGroup');
+
+                if (currentEditPfpMode === "url") {
+                    currentEditPfpMode = "file";
+                    editUrlGroup.style.display = "none";
+                    editFileGroup.style.display = "block";
+                    btnEdit.innerText = "Switch to Image URL";
+                } else {
+                    currentEditPfpMode = "url";
+                    editFileGroup.style.display = "none";
+                    editUrlGroup.style.display = "block";
+                    btnEdit.innerText = "Switch to File Upload";
+                }
+            }
+        }
+
+        function handleFileUpload(event, context) {
+            var file = event.target.files[0];
+            if (!file) return;
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                if (context === 'edit') {
+                    uploadedEditCustomPfp = e.target.result;
+                } else {
+                    uploadedCustomPfp = e.target.result;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderPfpPicker() {
+            var row = document.getElementById('pfpPickerRow');
+            row.innerHTML = '';
+            for (var i = 0; i < DEFAULT_PFPS.length; i++) {
+                var img = document.createElement('img');
+                img.src = DEFAULT_PFPS[i];
+                img.className = 'pfp-opt' + (selectedDefaultPfp === DEFAULT_PFPS[i] ? ' selected' : '');
+                img.onclick = (function(url){
+                    return function() {
+                        selectedDefaultPfp = url;
+                        document.getElementById('cPfpInput').value = url;
+                        renderPfpPicker();
+                    };
+                })(DEFAULT_PFPS[i]);
+                row.appendChild(img);
+            }
+        }
+
+        function renderEditPfpPicker() {
+            var row = document.getElementById('editPfpPickerRow');
+            row.innerHTML = '';
+            var accs = getAccounts();
+            var cur = accs[getActiveAccIndex()] || accs[0];
+            if (cur && cur.pfp) selectedEditDefaultPfp = cur.pfp;
+
+            for (var i = 0; i < DEFAULT_PFPS.length; i++) {
+                var img = document.createElement('img');
+                img.src = DEFAULT_PFPS[i];
+                img.className = 'pfp-opt' + (selectedEditDefaultPfp === DEFAULT_PFPS[i] ? ' selected' : '');
+                img.onclick = (function(url){
+                    return function() {
+                        selectedEditDefaultPfp = url;
+                        document.getElementById('editPfpInput').value = url;
+                        renderEditPfpPicker();
+                    };
+                })(DEFAULT_PFPS[i]);
+                row.appendChild(img);
+            }
+        }
+
+        function saveSettingPfp() {
+            var accs = getAccounts(); 
+            var idx = getActiveAccIndex();
+            var urlVal = document.getElementById('editPfpInput').value.trim();
+
+            var pfp = selectedEditDefaultPfp;
+            if (currentEditPfpMode === "file" && uploadedEditCustomPfp) {
+                pfp = uploadedEditCustomPfp;
+            } else if (currentEditPfpMode === "url" && urlVal) {
+                pfp = urlVal;
+            }
+
+            accs[idx].pfp = pfp; 
+            saveAccounts(accs); 
+            updateUserBar();
+
+            uploadedEditCustomPfp = "";
+            document.getElementById('editPfpInput').value = "";
+            if (document.getElementById('editFileInput')) document.getElementById('editFileInput').value = "";
+
+            closeModal('editPfpModal');
+            closeModal('settingsModal');
+        }
+
+        function getAccounts() {
+            try {
+                var data = localStorage.getItem('4s_yt_accounts');
+                var parsed = data ? JSON.parse(data) : [
+                    { uid: 1, name: "Default Creator", handle: "default4s", pfp: DEFAULT_PFPS[0], pass: "", google: false, lockUntil: 0, created: "Nov 2026", isAdmin: false }
+                ];
+                for (var i = 0; i < parsed.length; i++) {
+                    if (!parsed[i].uid) parsed[i].uid = (i + 1);
+                    if (!parsed[i].created) parsed[i].created = "Nov 2026";
+                }
+                return parsed;
+            } catch(e) { return []; }
+        }
+
+        function getNextUid(accs) {
+            var max = 0;
+            for (var i = 0; i < accs.length; i++) {
+                if (accs[i].uid && accs[i].uid > max) max = accs[i].uid;
+            }
+            return max + 1;
+        }
+
+        function saveAccounts(accs) {
+            try { localStorage.setItem('4s_yt_accounts', JSON.stringify(accs)); } catch(e) {}
+        }
+
+        function getActiveAccIndex() {
+            try {
+                var idx = localStorage.getItem('4s_yt_active_acc');
+                return idx ? parseInt(idx, 10) : 0;
+            } catch(e) { return 0; }
+        }
+
+        function setActiveAccIndex(idx) {
+            try { localStorage.setItem('4s_yt_active_acc', idx); } catch(e) {}
+            updateUserBar();
+        }
+
+        function updateUserBar() {
+            var accs = getAccounts();
+            var idx = getActiveAccIndex();
+            var cur = accs[idx] || accs[0];
+            if (cur) {
+                document.getElementById('uName').innerText = cur.name;
+                document.getElementById('uHandle').innerText = '@' + cur.handle + ' • ID: #' + (cur.uid || (idx + 1));
+                document.getElementById('uAdminTag').style.display = cur.isAdmin ? 'inline-block' : 'none';
+                document.getElementById('btnAdminPanel').style.display = cur.isAdmin ? 'inline-block' : 'none';
+                if (cur.pfp) document.getElementById('uAvatar').src = cur.pfp;
+            }
+        }
+
+        function grantAdminPerks() {
+            var accs = getAccounts();
+            var idx = getActiveAccIndex();
+            accs[idx].isAdmin = true;
+            saveAccounts(accs);
+            updateUserBar();
+        }
+
+        function toggleMyBadge() {
+            var accs = getAccounts();
+            var idx = getActiveAccIndex();
+            accs[idx].isAdmin = !accs[idx].isAdmin;
+            saveAccounts(accs);
+            updateUserBar();
+            closeModal('profileModal');
+        }
+
+        function openChannelProfile() {
+            var accs = getAccounts();
+            var cur = accs[getActiveAccIndex()] || accs[0];
+            document.getElementById('profPic').src = cur.pfp;
+            document.getElementById('profTitle').innerText = cur.name;
+            document.getElementById('profHandle').innerText = '@' + cur.handle + ' • Numeric ID: #' + cur.uid;
+            document.getElementById('profCreated').innerText = 'Member Since: ' + (cur.created || 'Nov 2026');
+
+            var badgeBtn = document.getElementById('profBadgeToggleBtn');
+            if (cur.isAdmin) {
+                badgeBtn.innerText = "Remove Admin Status";
+                badgeBtn.style.display = 'block';
+            } else {
+                badgeBtn.style.display = 'none';
+            }
+
+            var hList = document.getElementById('profHistoryList');
+            hList.innerHTML = '';
+            var history = [];
+            try {
+                var raw = localStorage.getItem('4s_yt_history_' + cur.uid);
+                if (raw) history = JSON.parse(raw);
+            } catch(e) {}
+
+            if (history.length === 0) {
+                hList.innerHTML = '<div style="padding:10px; text-align:center; color:#888;">No watch history recorded.</div>';
+            } else {
+                for (var i = 0; i < history.length; i++) {
+                    var item = history[i];
+                    var div = document.createElement('div');
+                    div.style.padding = '6px';
+                    div.style.borderBottom = '1px solid #eee';
+                    div.style.cursor = 'pointer';
+                    div.onclick = (function(vid){ return function(){ closeModal('profileModal'); playVideo(vid); }; })(item.id);
+                    div.innerHTML = '<b>' + item.title + '</b><br><span style="color:#666; font-size:9px;">' + item.time + '</span>';
+                    hList.appendChild(div);
+                }
+            }
+
+            openModal('profileModal');
+        }
+
+        function recordWatchHistory(vid, title) {
+            var accs = getAccounts();
+            var cur = accs[getActiveAccIndex()] || accs[0];
+            var history = [];
+            try {
+                var raw = localStorage.getItem('4s_yt_history_' + cur.uid);
+                if (raw) history = JSON.parse(raw);
+            } catch(e) {}
+
+            var now = new Date();
+            var timeStr = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+
+            history.unshift({ id: vid, title: title, time: timeStr });
+            if (history.length > 15) history.pop();
+            try { localStorage.setItem('4s_yt_history_' + cur.uid, JSON.stringify(history)); } catch(e) {}
+        }
+
+        function renderAccountList() {
+            var container = document.getElementById('accList');
+            container.innerHTML = '';
+            var accs = getAccounts();
+            var activeIdx = getActiveAccIndex();
+
+            for (var i = 0; i < accs.length; i++) {
+                var a = accs[i];
+                var item = document.createElement('div');
+                item.className = 'modal-item';
+                if (i === activeIdx) item.style.borderLeft = '4px solid #4bd84b';
+                item.innerText = 'ID #' + (a.uid || (i + 1)) + ' - ' + a.name + ' (@' + a.handle + ')' + (a.isAdmin ? ' [Admin]' : '') + (a.pass ? ' [Locked]' : '');
+                item.onclick = (function(index){ return function(){ selectAccountFromMenu(index); }; })(i);
+                container.appendChild(item);
+            }
+        }
+
+        function selectAccountFromMenu(idx) {
+            closeModal('accModal');
+            var accs = getAccounts();
+            var target = accs[idx];
+            var now = Date.now();
+
+            if (target.lockUntil && now < target.lockUntil) {
+                document.getElementById('status').innerHTML = 'Channel locked due to 5 failed password attempts.';
+                return;
+            }
+
+            if (target.pass) {
+                pendingTargetAccIndex = idx;
+                passAttempts = 0;
+                document.getElementById('passPromptTitle').innerText = 'Unlock ' + target.name;
+                document.getElementById('passPromptSub').innerText = '5 attempts remaining';
+                document.getElementById('passModalInput').value = '';
+                openModal('passModal');
+            } else {
+                setActiveAccIndex(idx);
+                renderView();
+            }
+        }
+
+        function submitPassModal() {
+            var accs = getAccounts();
+            var inputPass = document.getElementById('passModalInput').value;
+            
+            if (pendingTargetAccIndex === 'API_UNLOCK') {
+                if (inputPass === ADMIN_PASSCODE) {
+                    closeModal('passModal');
+                    grantAdminPerks();
+                    decryptedKeys = [window.atob(ENC_KEYS[0]), window.atob(ENC_KEYS[1]), window.atob(ENC_KEYS[2])];
+                    updateControlUI();
+                    renderView();
+                } else if (inputPass === SESSION_PASSCODE) {
+                    closeModal('passModal');
+                    decryptedKeys = [window.atob(ENC_KEYS[0]), window.atob(ENC_KEYS[1]), window.atob(ENC_KEYS[2])];
+                    updateControlUI();
+                    renderView();
+                } else {
+                    document.getElementById('passPromptSub').innerText = 'Incorrect API Passcode';
+                }
+                return;
+            }
+
+            var target = accs[pendingTargetAccIndex];
+            if (inputPass === target.pass) {
+                closeModal('passModal');
+                setActiveAccIndex(pendingTargetAccIndex);
+                renderView();
+            } else {
+                passAttempts++;
+                var rem = 5 - passAttempts;
+                if (rem <= 0) {
+                    target.lockUntil = Date.now() + (24 * 60 * 60 * 1000);
+                    saveAccounts(accs);
+                    closeModal('passModal');
+                    document.getElementById('status').innerHTML = '5 failed attempts. Channel locked for 24 hours.';
+                } else {
+                    document.getElementById('passPromptSub').innerText = rem + ' attempts remaining';
+                }
+            }
+        }
+
+        function submitNewChannel() {
+            var accs = getAccounts();
+            if (accs.length >= 20) {
+                document.getElementById('status').innerHTML = 'Maximum limit of 20 channels reached.';
+                closeModal('createModal');
+                return;
+            }
+
+            var name = document.getElementById('cNameInput').value.trim();
+            var handle = document.getElementById('cHandleInput').value.trim();
+            var pass = document.getElementById('cPassInput').value.trim();
+            var urlVal = document.getElementById('cPfpInput').value.trim();
+
+            var pfp = selectedDefaultPfp;
+            if (currentPfpMode === "file" && uploadedCustomPfp) {
+                pfp = uploadedCustomPfp;
+            } else if (currentPfpMode === "url" && urlVal) {
+                pfp = urlVal;
+            }
+
+            if (!name || !handle || handle.length < 3 || /[^a-zA-Z0-9]/.test(handle)) {
+                document.getElementById('status').innerHTML = 'Invalid input. Handle must be 3+ letters/numbers.';
+                return;
+            }
+
+            for (var i = 0; i < accs.length; i++) {
+                if (accs[i].handle.toLowerCase() === handle.toLowerCase()) {
+                    document.getElementById('status').innerHTML = 'Handle taken. Choose another.';
+                    return;
+                }
+            }
+
+            var newUid = getNextUid(accs);
+            accs.push({ 
+                uid: newUid, 
+                name: name, 
+                handle: handle, 
+                pfp: pfp, 
+                pass: pass, 
+                google: false, 
+                lockUntil: 0, 
+                created: "Nov 2026", 
+                isAdmin: false 
+            });
+
+            saveAccounts(accs);
+
+            uploadedCustomPfp = "";
+            document.getElementById('cPfpInput').value = "";
+            if (document.getElementById('cFileInput')) document.getElementById('cFileInput').value = "";
+
+            closeModal('createModal');
+            setActiveAccIndex(accs.length - 1);
+            renderView();
+        }
+
+        // Settings Actions
+        function settingChangeName() {
+            var accs = getAccounts(); var idx = getActiveAccIndex();
+            var n = prompt("Enter new Channel Name:", accs[idx].name);
+            if (n) { accs[idx].name = n; saveAccounts(accs); updateUserBar(); }
+        }
+        function settingChangeHandle() {
+            var accs = getAccounts(); var idx = getActiveAccIndex();
+            var h = prompt("Enter new Handle (3+ alphanumeric):", accs[idx].handle);
+            if (h && h.length >= 3 && !/[^a-zA-Z0-9]/.test(h)) { accs[idx].handle = h; saveAccounts(accs); updateUserBar(); }
+        }
+        function settingChangePass() {
+            var accs = getAccounts(); var idx = getActiveAccIndex();
+            var p = prompt("Enter new Password (leave empty for none):");
+            if (p !== null) { accs[idx].pass = p; saveAccounts(accs); }
+        }
+        function settingToggleGoogle() {
+            var accs = getAccounts(); var idx = getActiveAccIndex();
+            accs[idx].google = !accs[idx].google; saveAccounts(accs); updateUserBar();
+        }
+        function settingResetHistory() {
+            var accs = getAccounts(); var cur = accs[getActiveAccIndex()] || accs[0];
+            try { localStorage.removeItem('4s_yt_history_' + cur.uid); } catch(e) {}
+            document.getElementById('status').innerHTML = 'Watch history & FYP algorithm reset.';
+            renderView();
+        }
+        function settingClearComments() {
+            try { localStorage.removeItem('4s_yt_comments'); } catch(e) {}
+            document.getElementById('status').innerHTML = 'Local comments cleared.';
+            if (activeVideoId) showComments(activeVideoId);
+        }
+        function settingClearCache() {
+            document.getElementById('status').innerHTML = 'Temporary WebKit cache cleared.';
+        }
+        function settingResetLockouts() {
+            var accs = getAccounts(); var idx = getActiveAccIndex();
+            accs[idx].lockUntil = 0; saveAccounts(accs);
+            document.getElementById('status').innerHTML = 'Security lockouts reset for channel.';
+        }
+        function settingToggleAutoPlay() {
+            saverMode = !saverMode; updateControlUI();
+        }
+        function settingExportProfile() {
+            var accs = getAccounts(); var idx = getActiveAccIndex();
+            alert("Channel Metadata:\nID: #" + accs[idx].uid + "\nName: " + accs[idx].name + "\nHandle: @" + accs[idx].handle);
+        }
+        function settingDeleteAccount() {
+            var accs = getAccounts(); var idx = getActiveAccIndex();
+            if (accs.length <= 1) { alert("Cannot delete the only remaining channel."); return; }
+            accs.splice(idx, 1);
+            saveAccounts(accs);
+            setActiveAccIndex(0);
+            closeModal('settingsModal');
+            renderView();
+        }
+
+        // Admin Panel Controls
+        function openAdminPanel() {
+            var accs = getAccounts();
+            var cur = accs[getActiveAccIndex()] || accs[0];
+            if (!cur.isAdmin) return;
+
+            var container = document.getElementById('adminAccList');
+            container.innerHTML = '';
+            
+            for (var i = 0; i < accs.length; i++) {
+                var a = accs[i];
+                var div = document.createElement('div');
+                div.className = 'modal-item';
+                div.innerHTML = '<b>ID #' + a.uid + '</b>: ' + a.name + ' (@' + a.handle + ')' + (a.isAdmin ? ' [Admin]' : '');
+                div.onclick = (function(index){ return function(){ adminManageChannel(index); }; })(i);
+                container.appendChild(div);
+            }
+            openModal('adminModal');
+        }
+
+        function adminManageChannel(index) {
+            var accs = getAccounts();
+            var a = accs[index];
+            var action = prompt(
+                "Admin Actions for " + a.name + " (ID #" + a.uid + "):\n" +
+                "1. Change Numeric ID\n" +
+                "2. Change Password\n" +
+                "3. Unlock 24-hr Lockout\n" +
+                "4. Toggle Admin Status\n" +
+                "5. Delete Channel\n" +
+                "Enter option (1-5):"
+            );
+
+            if (action === '1') {
+                var newId = prompt("Enter new integer ID for " + a.name + ":", a.uid);
+                if (newId) {
+                    var parsed = parseInt(newId, 10);
+                    if (!isNaN(parsed) && parsed > 0) {
+                        a.uid = parsed;
+                        saveAccounts(accs);
+                        updateUserBar();
+                    }
+                }
+            } else if (action === '2') {
+                var newPass = prompt("Set new password (leave blank to remove):");
+                if (newPass !== null) {
+                    a.pass = newPass;
+                    saveAccounts(accs);
+                }
+            } else if (action === '3') {
+                a.lockUntil = 0;
+                saveAccounts(accs);
+                alert("Lockout cleared.");
+            } else if (action === '4') {
+                a.isAdmin = !a.isAdmin;
+                saveAccounts(accs);
+                updateUserBar();
+            } else if (action === '5') {
+                if (accs.length > 1) {
+                    accs.splice(index, 1);
+                    saveAccounts(accs);
+                    setActiveAccIndex(0);
+                } else {
+                    alert("Cannot delete last channel.");
+                }
+            }
+            openAdminPanel();
+        }
+
+        function adminGenerateFakes() {
+            var accs = getAccounts();
+            var demos = [
+                { name: "RetroTech Lab", handle: "retrotech", pfp: DEFAULT_PFPS[1] },
+                { name: "iOS Archival", handle: "iosarchive", pfp: DEFAULT_PFPS[2] },
+                { name: "Vintage Gaming", handle: "vintagemania", pfp: DEFAULT_PFPS[3] }
+            ];
+
+            for (var i = 0; i < demos.length; i++) {
+                var d = demos[i];
+                var uid = getNextUid(accs);
+                accs.push({ uid: uid, name: d.name, handle: d.handle, pfp: d.pfp, pass: "", google: true, lockUntil: 0, created: "Nov 2026", isAdmin: false });
+            }
+            saveAccounts(accs);
+            openAdminPanel();
+        }
+
+        function adminClearAll() {
+            saveAccounts([{ uid: 1, name: "Default Creator", handle: "default4s", pfp: DEFAULT_PFPS[0], pass: "", google: false, lockUntil: 0, created: "Nov 2026", isAdmin: false }]);
+            setActiveAccIndex(0);
+            closeModal('adminModal');
+            renderView();
+        }
+
+        function isUnlocked() { return decryptedKeys.length === 3; }
+
+        function handleLockClick() {
+            if (isUnlocked()) {
+                decryptedKeys = [];
+                updateControlUI();
+                renderView();
+            } else {
+                pendingTargetAccIndex = 'API_UNLOCK';
+                document.getElementById('passPromptTitle').innerText = 'Unlock API';
+                document.getElementById('passPromptSub').innerText = 'Enter passcode';
+                document.getElementById('passModalInput').value = '';
+                openModal('passModal');
+            }
+        }
+
+        function getActiveKey() { return isUnlocked() ? decryptedKeys[activeKeyIndex - 1] : ""; }
+
+        function toggleApi() {
+            activeKeyIndex = (activeKeyIndex % 3) + 1;
+            updateControlUI();
+            if (isUnlocked()) renderView();
+        }
+
+        function toggleSaver() {
+            saverMode = !saverMode;
+            updateControlUI();
+            if (isUnlocked()) renderView();
+        }
+
+        function updateControlUI() {
+            document.getElementById('btnApi').innerText = 'API: Key ' + activeKeyIndex;
+            document.getElementById('btnSaver').innerText = saverMode ? 'Saver: ON (3 vids)' : 'Saver: OFF (10 vids)';
+            document.getElementById('btnSaver').className = saverMode ? 'btn-ios active' : 'btn-ios';
+            document.getElementById('btnLock').innerText = isUnlocked() ? 'Unlocked API' : 'Locked API';
+            document.getElementById('btnLock').className = isUnlocked() ? 'btn-ios active' : 'btn-ios';
+        }
+
+        function showSkeleton() {
+            var area = document.getElementById('contentArea');
+            area.innerHTML = '<div class="list-container">' +
+                '<div class="skeleton-card"><div class="sk-thumb"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line short"></div></div><div class="clear"></div></div>' +
+                '<div class="skeleton-card"><div class="sk-thumb"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line short"></div></div><div class="clear"></div></div>' +
+            '</div>';
+        }
+
+        function makeRequest(url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try { callback(null, JSON.parse(xhr.responseText)); } catch(e) { callback('PARSE_ERR', null); }
+                    } else if (xhr.status === 403) {
+                        callback('QUOTA_EXCEEDED', null);
+                    } else { callback('ERR_' + xhr.status, null); }
+                }
+            };
+            xhr.send();
+        }
+
+        function playVideo(id, title) {
+            activeVideoId = id;
+            if (title) recordWatchHistory(id, title);
+            var wrap = document.getElementById('playerWrap');
+            var player = document.getElementById('ytPlayer');
+            wrap.style.display = 'block';
+            player.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+            window.scrollTo(0, 0);
+            showComments(id);
+        }
+
+        function showComments(vid) {
+            var existing = document.getElementById('commentBlock');
+            if (existing) existing.parentNode.removeChild(existing);
+
+            var section = document.createElement('div');
+            section.id = 'commentBlock';
+            section.className = 'comments-section';
+
+            var title = document.createElement('div');
+            title.style.fontWeight = 'bold';
+            title.style.marginBottom = '6px';
+            title.innerText = 'Comments';
+            section.appendChild(title);
+
+            var list = document.createElement('div');
+            list.id = 'commentList';
+
+            var stored = [];
+            try {
+                var raw = localStorage.getItem('4s_yt_comments_' + vid);
+                if (raw) stored = JSON.parse(raw);
+            } catch(e) {}
+
+            for (var i = 0; i < stored.length; i++) {
+                var item = document.createElement('div');
+                item.className = 'comment-item';
+                item.innerHTML = '<span class="comment-author">' + stored[i].user + ':</span> ' + stored[i].text;
+                list.appendChild(item);
+            }
+            section.appendChild(list);
+
+            if (isUnlocked()) {
+                var key = getActiveKey();
+                var url = 'https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=5&videoId=' + vid + '&key=' + key;
+                makeRequest(url, function(err, data) {
+                    if (!err && data && data.items) {
+                        for (var k = 0; k < data.items.length; k++) {
+                            var topC = data.items[k].snippet.topLevelComment.snippet;
+                            var cDiv = document.createElement('div');
+                            cDiv.className = 'comment-item';
+                            cDiv.innerHTML = '<span class="comment-author">' + topC.authorDisplayName + ':</span> ' + topC.textDisplay;
+                            list.appendChild(cDiv);
+                        }
+                    }
+                });
+            }
+
+            var form = document.createElement('form');
+            form.style.marginTop = '8px';
+            form.onsubmit = function(e) {
+                if (e && e.preventDefault) e.preventDefault();
+                var inp = document.getElementById('cInput');
+                var val = inp.value.trim();
+                if (!val) return;
+
+                var accs = getAccounts();
+                var cur = accs[getActiveAccIndex()] || accs[0];
+
+                stored.unshift({ user: cur.name + ' (@' + cur.handle + ')', text: val });
+                try { localStorage.setItem('4s_yt_comments_' + vid, JSON.stringify(stored)); } catch(e) {}
+                inp.value = '';
+                showComments(vid);
+            };
+
+            form.innerHTML = '<input type="text" id="cInput" class="comment-input" placeholder="Add a comment..." required> ' +
+                             '<button type="submit" class="btn-ios" style="padding:4px 8px;">Post</button>';
+            section.appendChild(form);
+
+            document.getElementById('contentArea').appendChild(section);
+        }
+
+        function renderView() {
+            var area = document.getElementById('contentArea');
+            area.innerHTML = '';
+            var status = document.getElementById('status');
+
+            if (!isUnlocked()) {
+                status.innerHTML = 'API Key locked. Displaying fallback test feed:';
+
+                var fallbackHeader = document.createElement('div');
+                fallbackHeader.className = 'section-header';
+                fallbackHeader.innerText = 'Fallback Test Feed';
+                area.appendChild(fallbackHeader);
+
+                var list = document.createElement('div');
+                list.className = 'list-container';
+
+                for (var i = 0; i < FALLBACK_VIDEOS.length; i++) {
+                    var item = FALLBACK_VIDEOS[i];
+                    var card = document.createElement('div');
+                    card.className = 'card';
+                    card.onclick = (function(vId, vTitle){ return function(){ playVideo(vId, vTitle); }; })(item.id, item.title);
+                    card.innerHTML = 
+                        '<img src="https://img.youtube.com/vi/' + item.id + '/hqdefault.jpg">' +
+                        '<div>' +
+                            '<div class="card-title">' + item.title + '</div>' +
+                            '<div class="card-meta"><b>' + item.creator + '</b> • ' + item.views + '</div>' +
+                        '</div><div class="clear"></div>';
+                    list.appendChild(card);
+                }
+                area.appendChild(list);
+                return;
+            }
+
+            var key = getActiveKey();
+            var maxRes = saverMode ? 3 : 5;
+            status.innerHTML = 'Fetching live algorithm feed...';
+            showSkeleton();
+
+            var queryCreator = DEFAULT_CREATORS[Math.floor(Math.random() * DEFAULT_CREATORS.length)];
+            var url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=' + (maxRes * 2) + '&q=' + encodeURIComponent(queryCreator) + '&key=' + key;
+
+            makeRequest(url, function(err, data) {
+                if (err === 'QUOTA_EXCEEDED') {
+                    status.innerHTML = 'Key ' + activeKeyIndex + ' quota hit. Auto-switching...';
+                    toggleApi();
+                    return;
+                }
+                if (err || !data.items) {
+                    status.innerHTML = 'API Error. Loaded fallback feed:';
+                    decryptedKeys = [];
+                    renderView();
+                    return;
+                }
+
+                status.innerHTML = '';
+                area.innerHTML = '';
+
+                var shortsHeader = document.createElement('div');
+                shortsHeader.className = 'section-header';
+                shortsHeader.innerText = 'Shorts';
+                area.appendChild(shortsHeader);
+
+                var shortsRow = document.createElement('div');
+                shortsRow.className = 'shorts-container';
+
+                var sCount = 0;
+                for (var j = 0; j < data.items.length; j++) {
+                    var sItem = data.items[j];
+                    if (sCount < maxRes) {
+                        sCount++;
+                        var sc = document.createElement('div');
+                        sc.className = 'short-card';
+                        sc.onclick = (function(vId, vTitle){ return function(){ playVideo(vId, vTitle); }; })(sItem.id.videoId, sItem.snippet.title);
+                        sc.innerHTML = '<img src="' + sItem.snippet.thumbnails.high.url + '"><div class="short-title">' + sItem.snippet.title + '</div>';
+                        shortsRow.appendChild(sc);
+                    }
+                }
+                area.appendChild(shortsRow);
+
+                var feedHeader = document.createElement('div');
+                feedHeader.className = 'section-header';
+                feedHeader.innerText = 'FYP Feed (Recommended)';
+                area.appendChild(feedHeader);
+
+                var feedList = document.createElement('div');
+                feedList.className = 'list-container';
+
+                var vCount = 0;
+                for (var k = 0; k < data.items.length; k++) {
+                    var v = data.items[k];
+                    if (vCount < maxRes) {
+                        vCount++;
+                        var cardItem = document.createElement('div');
+                        cardItem.className = 'card';
+                        cardItem.onclick = (function(vId, vTitle){ return function(){ playVideo(vId, vTitle); }; })(v.id.videoId, v.snippet.title);
+                        cardItem.innerHTML = 
+                            '<img src="' + v.snippet.thumbnails.high.url + '">' +
+                            '<div>' +
+                                '<div class="card-title">' + v.snippet.title + '</div>' +
+                                '<div class="card-meta"><b>' + v.snippet.channelTitle + '</b></div>' +
+                            '</div><div class="clear"></div>';
+                        feedList.appendChild(cardItem);
+                    }
+                }
+                area.appendChild(feedList);
+            });
+        }
+
+        function doSearch(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            var q = document.getElementById('searchInput').value;
+            var status = document.getElementById('status');
+
+            if (!isUnlocked()) {
+                status.innerHTML = 'API Key locked. Tap "Locked API" to unlock live search.';
+                renderView();
+                return;
+            }
+
+            var key = getActiveKey();
+            var maxRes = saverMode ? 3 : 10;
+            status.innerHTML = 'Searching live YouTube API...';
+            showSkeleton();
+
+            var searchUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=' + maxRes + '&q=' + encodeURIComponent(q) + '&key=' + key;
+
+            makeRequest(searchUrl, function(err, data) {
+                if (err === 'QUOTA_EXCEEDED') {
+                    status.innerHTML = 'Key ' + activeKeyIndex + ' quota hit. Auto-switching...';
+                    toggleApi();
+                    return;
+                }
+                if (err || !data.items) {
+                    status.innerHTML = 'Search error or no items found.';
+                    renderView();
+                    return;
+                }
+
+                status.innerHTML = '';
+                var area = document.getElementById('contentArea');
+                area.innerHTML = '';
+
+                if (data.items.length > 0) {
+                    var topItem = data.items[0];
+                    var chCard = document.createElement('div');
+                    chCard.className = 'channel-card';
+                    chCard.innerHTML = 
+                        '<img class="channel-avatar" src="' + topItem.snippet.thumbnails.default.url + '">' +
+                        '<div>' +
+                            '<div class="channel-title">' + topItem.snippet.channelTitle + '</div>' +
+                            '<div class="channel-subs">Verified Creator • Live YouTube Results</div>' +
+                        '</div>';
+                    area.appendChild(chCard);
+                }
+
+                var resHeader = document.createElement('div');
+                resHeader.className = 'section-header';
+                resHeader.innerText = 'Search Results';
+                area.appendChild(resHeader);
+
+                var list = document.createElement('div');
+                list.className = 'list-container';
+
+                for (var i = 0; i < data.items.length; i++) {
+                    var item = data.items[i];
+                    var vId = item.id.videoId;
+                    var t = item.snippet.title;
+                    var c = item.snippet.channelTitle;
+                    var th = item.snippet.thumbnails.high ? item.snippet.thumbnails.high.url : item.snippet.thumbnails.default.url;
+
+                    var card = document.createElement('div');
+                    card.className = 'card';
+                    card.onclick = (function(vid, vTitle){ return function(){ playVideo(vid, vTitle); }; })(vId, t);
+                    card.innerHTML = 
+                        '<img src="' + th + '">' +
+                        '<div>' +
+                            '<div class="card-title">' + t + '</div>' +
+                            '<div class="card-meta"><b>' + c + '</b></div>' +
+                        '</div><div class="clear"></div>';
+                    list.appendChild(card);
+                }
+                area.appendChild(list);
+            });
+        }
+
+        window.onload = function() {
+            updateUserBar();
+            updateControlUI();
+            renderView();
+        };
+    </script>
 </body>
 </html>

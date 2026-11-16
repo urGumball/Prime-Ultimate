@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Air Hockey 4S</title>
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <style>
+        * { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #000 url('https://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; color: #fff; font-family: "Helvetica Neue", sans-serif; padding: 8px; -webkit-user-select: none; }
+        .header { background: -webkit-gradient(linear, left top, left bottom, from(#b0b9c6), to(#4d5c71)); padding: 6px; border-radius: 6px 6px 0 0; text-align: center; margin-bottom: 8px; }
+        .header h1 { font-size: 14px; text-shadow: 0 -1px 0 #222; }
+        .arcade-cabinet { background: -webkit-gradient(linear, left top, left bottom, from(#3a4556), to(#1e242e)); border: 1px solid #4a5669; border-radius: 8px; padding: 6px; max-width: 320px; margin: 0 auto; text-align: center; }
+        canvas { display: block; margin: 0 auto; background: #eef5fc; border-radius: 4px; border: 2px solid #333; }
+        
+        .btn-ios {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 -1px 0 #000;
+            background: -webkit-gradient(linear, left top, left bottom, from(#6d7d93), color-stop(0.5, #4c586c), color-stop(0.51, #3b4657), to(#2d3644));
+            border: 1px solid #1f2530;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .btn-ios:active {
+            background: -webkit-gradient(linear, left top, left bottom, from(#2d3644), color-stop(0.5, #3b4657), color-stop(0.51, #4c586c), to(#6d7d93));
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header"><h1>Air Hockey 4S</h1></div>
+
+    <div class="arcade-cabinet">
+        <canvas id="rink" width="280" height="360"></canvas>
+        <button class="btn-ios" onclick="resetRound()">↺ Restart Round</button>
+        <br>
+        <a href="../games.html" class="btn-ios" style="margin-top:4px;">◄ Back to Menu</a>
+    </div>
+
+    <script>
+        var canvas = document.getElementById('rink');
+        var ctx = canvas.getContext('2d');
+
+        var puck = { x: 140, y: 180, vx: 2, vy: 3, r: 10 };
+        var player = { x: 140, y: 300, r: 18 };
+        var ai = { x: 140, y: 60, r: 18 };
+        var playerScore = 0, aiScore = 0;
+        var goalWidth = 90;
+
+        function update() {
+            puck.x += puck.vx;
+            puck.y += puck.vy;
+
+            // Friction
+            puck.vx *= 0.985;
+            puck.vy *= 0.985;
+
+            // Wall bounces
+            if (puck.x - puck.r < 0) { puck.x = puck.r; puck.vx = -puck.vx; }
+            if (puck.x + puck.r > canvas.width) { puck.x = canvas.width - puck.r; puck.vx = -puck.vx; }
+
+            // Goal detection
+            var inGoalX = (puck.x > (canvas.width - goalWidth)/2) && (puck.x < (canvas.width + goalWidth)/2);
+            if (puck.y - puck.r < 0) {
+                if (inGoalX) { playerScore++; resetPuck(); }
+                else { puck.y = puck.r; puck.vy = -puck.vy; }
+            }
+            if (puck.y + puck.r > canvas.height) {
+                if (inGoalX) { aiScore++; resetPuck(); }
+                else { puck.y = canvas.height - puck.r; puck.vy = -puck.vy; }
+            }
+
+            // AI Movement tracking puck (with boundaries to prevent sticking)
+            if (ai.x < puck.x - 4) ai.x += 2.5;
+            else if (ai.x > puck.x + 4) ai.x -= 2.5;
+
+            // Constrain AI to top zone
+            if (ai.x < ai.r) ai.x = ai.r;
+            if (ai.x > canvas.width - ai.r) ai.x = canvas.width - ai.r;
+            
+            if (puck.y < canvas.height / 2) {
+                if (ai.y < puck.y - 15) ai.y += 2;
+                else if (ai.y > puck.y + 15) ai.y -= 2;
+            } else {
+                if (ai.y > 60) ai.y -= 1.5;
+                else if (ai.y < 60) ai.y += 1.5;
+            }
+
+            checkCollision(player);
+            checkCollision(ai);
+        }
+
+        function checkCollision(mallet) {
+            var dx = puck.x - mallet.x;
+            var dy = puck.y - mallet.y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            var minDist = puck.r + mallet.r;
+
+            if (dist < minDist) {
+                var angle = Math.atan2(dy, dx);
+                var speed = 6;
+                puck.vx = Math.cos(angle) * speed;
+                puck.vy = Math.sin(angle) * speed;
+            }
+        }
+
+        function resetPuck() {
+            puck.x = canvas.width / 2;
+            puck.y = canvas.height / 2;
+            puck.vx = (Math.random() > 0.5 ? 2 : -2);
+            puck.vy = (Math.random() > 0.5 ? 3 : -3);
+            ai.x = 140;
+            ai.y = 60;
+        }
+
+        function resetRound() {
+            resetPuck();
+            player.x = 140;
+            player.y = 300;
+        }
+
+        function draw() {
+            ctx.fillStyle = "#eef5fc";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Center line & circle
+            ctx.strokeStyle = "#d84b4b";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+            ctx.lineTo(canvas.width, canvas.height / 2);
+            ctx.arc(canvas.width / 2, canvas.height / 2, 30, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Goals
+            ctx.fillStyle = "#333";
+            ctx.fillRect((canvas.width - goalWidth)/2, 0, goalWidth, 4);
+            ctx.fillRect((canvas.width - goalWidth)/2, canvas.height - 4, goalWidth, 4);
+
+            // Scores
+            ctx.fillStyle = "#888";
+            ctx.font = "16px Helvetica";
+            ctx.fillText(aiScore, 10, canvas.height / 2 - 10);
+            ctx.fillText(playerScore, 10, canvas.height / 2 + 22);
+
+            // AI Mallet
+            ctx.fillStyle = "#cc0000";
+            ctx.beginPath();
+            ctx.arc(ai.x, ai.y, ai.r, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Player Mallet
+            ctx.fillStyle = "#0066cc";
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Puck
+            ctx.fillStyle = "#111111";
+            ctx.beginPath();
+            ctx.arc(puck.x, puck.y, puck.r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function movePlayer(clientX, clientY) {
+            var rect = canvas.getBoundingClientRect();
+            var tx = clientX - rect.left;
+            var ty = clientY - rect.top;
+            
+            player.x = tx;
+            if (ty < canvas.height / 2 + player.r) {
+                player.y = canvas.height / 2 + player.r;
+            } else if (ty > canvas.height - player.r) {
+                player.y = canvas.height - player.r;
+            } else {
+                player.y = ty;
+            }
+        }
+
+        canvas.addEventListener('touchstart', function(e) {
+            movePlayer(e.touches[0].clientX, e.touches[0].clientY);
+        }, false);
+
+        canvas.addEventListener('touchmove', function(e) {
+            if (e.preventDefault) e.preventDefault();
+            movePlayer(e.touches[0].clientX, e.touches[0].clientY);
+        }, false);
+
+        canvas.addEventListener('mousemove', function(e) {
+            movePlayer(e.clientX, e.clientY);
+        }, false);
+
+        setInterval(function() { update(); draw(); }, 1000 / 60);
+    </script>
+</body>
+</html>

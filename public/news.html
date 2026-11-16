@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Social Feed</title>
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <style>
+        * { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #000 url('https://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; color: #fff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 10px; }
+        
+        .header {
+            background: -webkit-gradient(linear, left top, left bottom, from(#b0b9c6), color-stop(0.05, #8e9cb0), color-stop(0.5, #6d7d93), color-stop(0.51, #57677d), to(#4d5c71));
+            border-bottom: 1px solid #2e3540;
+            padding: 8px 10px;
+            border-radius: 6px 6px 0 0;
+            margin-bottom: 10px;
+        }
+        .header h1 { font-size: 15px; text-shadow: 0 -1px 0 #222; text-align: center; color: #fff; }
+
+        .list-container { background: #fff; border-radius: 8px; border: 1px solid #999; overflow: hidden; }
+        .post { padding: 10px; border-bottom: 1px solid #e0e0e0; color: #000; text-decoration: none; display: block; }
+        .post:last-child { border-bottom: none; }
+        .post:active { background: #0275d8; color: #fff; }
+        .post-title { font-size: 13px; font-weight: bold; line-height: 1.3; }
+        .post-meta { font-size: 10px; color: #666; margin-top: 4px; }
+        .post:active .post-meta { color: #ddd; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Public Social Feed</h1>
+    </div>
+
+    <div id="status" style="font-size: 11px; color: #aaa; text-align: center; margin-bottom: 8px;">Loading feed...</div>
+    <div class="list-container" id="feedResults"></div>
+
+    <script>
+        function loadFeed() {
+            var xhr = new XMLHttpRequest();
+            // Fetching public Hacker News JSON endpoint (ultra-lightweight for legacy iOS)
+            xhr.open('GET', 'https://hacker-news.firebaseio.com/v0/topstories.json', true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var ids = JSON.parse(xhr.responseText).slice(0, 10);
+                    document.getElementById('status').innerHTML = '';
+                    for (var i = 0; i < ids.length; i++) {
+                        fetchItem(ids[i]);
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function fetchItem(id) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://hacker-news.firebaseio.com/v0/item/' + id + '.json', true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var item = JSON.parse(xhr.responseText);
+                    renderPost(item);
+                }
+            };
+            xhr.send();
+        }
+
+        function renderPost(item) {
+            var container = document.getElementById('feedResults');
+            var a = document.createElement('a');
+            a.className = 'post';
+            a.href = item.url || ('https://news.ycombinator.com/item?id=' + item.id);
+            a.target = '_blank';
+
+            a.innerHTML = 
+                '<div class="post-title">' + item.title + '</div>' +
+                '<div class="post-meta">By ' + item.by + ' • ' + (item.score || 0) + ' points</div>';
+
+            container.appendChild(a);
+        }
+
+        window.onload = loadFeed;
+    </script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <title>Paint Studio 4S</title>
+    <style>
+        * { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: #000 url('https://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; 
+            color: #fff; 
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+            padding: 8px; 
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Metallic iOS 5 Header Bar */
+        .header {
+            background: -webkit-gradient(linear, left top, left bottom, from(#b0b9c6), color-stop(0.05, #8e9cb0), color-stop(0.5, #6d7d93), color-stop(0.51, #57677d), to(#4d5c71));
+            border-bottom: 1px solid #2e3540;
+            padding: 6px 10px;
+            border-radius: 6px 6px 0 0;
+            -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .header h1 { font-size: 14px; text-shadow: 0 -1px 0 #222; color: #fff; }
+
+        /* Canvas Frame */
+        .photo-frame {
+            background: #fff;
+            padding: 4px;
+            border-radius: 6px;
+            border: 1px solid #999;
+            -webkit-box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        canvas { max-width: 100%; height: auto; display: block; margin: 0 auto; background: #ffffff; cursor: crosshair; }
+
+        /* Skeuomorphic Tool Box */
+        .toolbar {
+            background: -webkit-gradient(linear, left top, left bottom, from(#3a4556), to(#1e242e));
+            border: 1px solid #4a5669;
+            border-radius: 8px;
+            padding: 8px;
+            -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 5px rgba(0,0,0,0.5);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .tool-row { text-align: center; margin-bottom: 6px; }
+        .tool-row:last-child { margin-bottom: 0; }
+
+        /* iOS Skeuomorphic Glossy Buttons */
+        .btn-ios {
+            display: inline-block;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 -1px 0 #000;
+            background: -webkit-gradient(linear, left top, left bottom, from(#6d7d93), color-stop(0.5, #4c586c), color-stop(0.51, #3b4657), to(#2d3644));
+            border: 1px solid #1f2530;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 1px 2px rgba(0,0,0,0.5);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 1px 2px rgba(0,0,0,0.5);
+            margin: 2px;
+            cursor: pointer;
+        }
+        .btn-ios.active {
+            background: -webkit-gradient(linear, left top, left bottom, from(#d84b4b), to(#8c1515));
+            border-color: #500;
+        }
+
+        /* Color Swatches */
+        .color-swatch {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border-radius: 3px;
+            border: 1px solid #fff;
+            margin: 2px;
+            cursor: pointer;
+            -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+        }
+        .color-swatch.active { border: 2px solid #ffcc00; }
+
+        /* Save Modal */
+        #saveModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            padding: 20px;
+            text-align: center;
+            z-index: 1000;
+        }
+        #saveModal img { max-width: 90%; border: 2px solid #fff; border-radius: 6px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Paint Studio 4S</h1>
+    </div>
+
+    <!-- Drawing Canvas -->
+    <div class="photo-frame">
+        <canvas id="paintCanvas" width="300" height="250"></canvas>
+    </div>
+
+    <!-- Windows 10 Paint Tools in iOS 5 Skeuomorphic Container -->
+    <div class="toolbar">
+        <!-- Tools -->
+        <div class="tool-row">
+            <button class="btn-ios active" id="btnBrush" onclick="setTool('brush')">Brush</button>
+            <button class="btn-ios" id="btnBucket" onclick="setTool('bucket')">Fill</button>
+            <button class="btn-ios" id="btnRect" onclick="setTool('rect')">Rect</button>
+            <button class="btn-ios" id="btnCircle" onclick="setTool('circle')">Circle</button>
+            <button class="btn-ios" id="btnEraser" onclick="setTool('eraser')">Eraser</button>
+        </div>
+
+        <!-- Size & Actions -->
+        <div class="tool-row">
+            <button class="btn-ios" onclick="setSize(2)">Thin</button>
+            <button class="btn-ios" onclick="setSize(6)">Med</button>
+            <button class="btn-ios" onclick="setSize(12)">Thick</button>
+            <button class="btn-ios" onclick="clearCanvas()">Clear</button>
+            <button class="btn-ios" style="background:-webkit-gradient(linear, left top, left bottom, from(#4bd84b), to(#158c15)); border-color:#050;" onclick="exportImage()">Save</button>
+        </div>
+
+        <!-- Palette Swatches -->
+        <div class="tool-row">
+            <div class="color-swatch active" style="background:#000000;" onclick="setColor('#000000', this)"></div>
+            <div class="color-swatch" style="background:#ffffff;" onclick="setColor('#ffffff', this)"></div>
+            <div class="color-swatch" style="background:#ff0000;" onclick="setColor('#ff0000', this)"></div>
+            <div class="color-swatch" style="background:#00cc00;" onclick="setColor('#00cc00', this)"></div>
+            <div class="color-swatch" style="background:#0066ff;" onclick="setColor('#0066ff', this)"></div>
+            <div class="color-swatch" style="background:#ffcc00;" onclick="setColor('#ffcc00', this)"></div>
+            <div class="color-swatch" style="background:#ff6600;" onclick="setColor('#ff6600', this)"></div>
+            <div class="color-swatch" style="background:#9900cc;" onclick="setColor('#9900cc', this)"></div>
+        </div>
+    </div>
+
+    <!-- Export Modal for iOS Camera Roll Save -->
+    <div id="saveModal">
+        <div style="font-size:12px; color:#fff; margin-bottom:8px;">Tap and hold image to save to Camera Roll:</div>
+        <img id="exportedImg" src="" alt="Drawing">
+        <br>
+        <button class="btn-ios" onclick="closeModal()">Close</button>
+    </div>
+
+    <script>
+        var canvas = document.getElementById('paintCanvas');
+        var ctx = canvas.getContext('2d');
+
+        // White background setup
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        var currentTool = 'brush';
+        var currentColor = '#000000';
+        var currentSize = 2;
+        var isDrawing = false;
+        var startX = 0;
+        var startY = 0;
+        var snapshot = null;
+
+        function setTool(tool) {
+            currentTool = tool;
+            var btns = ['btnBrush', 'btnBucket', 'btnRect', 'btnCircle', 'btnEraser'];
+            for (var i = 0; i < btns.length; i++) {
+                var el = document.getElementById(btns[i]);
+                if (el) el.className = 'btn-ios';
+            }
+            if (tool === 'brush') document.getElementById('btnBrush').className = 'btn-ios active';
+            if (tool === 'bucket') document.getElementById('btnBucket').className = 'btn-ios active';
+            if (tool === 'rect') document.getElementById('btnRect').className = 'btn-ios active';
+            if (tool === 'circle') document.getElementById('btnCircle').className = 'btn-ios active';
+            if (tool === 'eraser') document.getElementById('btnEraser').className = 'btn-ios active';
+        }
+
+        function setColor(color, el) {
+            currentColor = color;
+            var swatches = document.getElementsByClassName('color-swatch');
+            for (var i = 0; i < swatches.length; i++) {
+                swatches[i].className = 'color-swatch';
+            }
+            el.className = 'color-swatch active';
+        }
+
+        function setSize(size) { currentSize = size; }
+
+        function clearCanvas() {
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function getPos(e) {
+            var rect = canvas.getBoundingClientRect();
+            var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        // Event Handling for Touch (iOS 5) and Mouse
+        function startDraw(e) {
+            isDrawing = true;
+            var pos = getPos(e);
+            startX = pos.x;
+            startY = pos.y;
+
+            if (currentTool === 'bucket') {
+                fillBucket(currentColor);
+                isDrawing = false;
+                return;
+            }
+
+            snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.strokeStyle = currentTool === 'eraser' ? '#ffffff' : currentColor;
+            ctx.lineWidth = currentSize;
+            ctx.lineCap = 'round';
+        }
+
+        function moveDraw(e) {
+            if (!isDrawing) return;
+            if (e.preventDefault) e.preventDefault();
+            var pos = getPos(e);
+
+            if (currentTool === 'brush' || currentTool === 'eraser') {
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+            } else if (currentTool === 'rect') {
+                ctx.putImageData(snapshot, 0, 0);
+                ctx.beginPath();
+                ctx.strokeStyle = currentColor;
+                ctx.lineWidth = currentSize;
+                ctx.strokeRect(startX, startY, pos.x - startX, pos.y - startY);
+            } else if (currentTool === 'circle') {
+                ctx.putImageData(snapshot, 0, 0);
+                ctx.beginPath();
+                ctx.strokeStyle = currentColor;
+                ctx.lineWidth = currentSize;
+                var radius = Math.sqrt(Math.pow(pos.x - startX, 2) + Math.pow(pos.y - startY, 2));
+                ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+        }
+
+        function stopDraw() { isDrawing = false; }
+
+        // Touch Listeners
+        canvas.addEventListener('touchstart', startDraw, false);
+        canvas.addEventListener('touchmove', moveDraw, false);
+        canvas.addEventListener('touchend', stopDraw, false);
+
+        // Mouse Listeners
+        canvas.addEventListener('mousedown', startDraw, false);
+        canvas.addEventListener('mousemove', moveDraw, false);
+        canvas.addEventListener('mouseup', stopDraw, false);
+
+        // Fill Bucket Feature
+        function fillBucket(fillColor) {
+            ctx.fillStyle = fillColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Save & Export
+        function exportImage() {
+            var dataUrl = canvas.toDataURL('image/png');
+            document.getElementById('exportedImg').src = dataUrl;
+            document.getElementById('saveModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('saveModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

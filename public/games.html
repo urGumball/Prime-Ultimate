@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <title>Arcade Studio 4S</title>
+    <style>
+        * { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: #000 url('https://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; 
+            color: #fff; 
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+            padding: 12px; 
+        }
+
+        .header {
+            background: -webkit-gradient(linear, left top, left bottom, from(#b0b9c6), color-stop(0.05, #8e9cb0), color-stop(0.5, #6d7d93), color-stop(0.51, #57677d), to(#4d5c71));
+            border-bottom: 1px solid #2e3540;
+            padding: 8px 10px;
+            border-radius: 6px 6px 0 0;
+            -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .header h1 { font-size: 16px; text-shadow: 0 -1px 0 #222; color: #fff; margin: 0; }
+
+        .btn {
+            display: block;
+            box-sizing: border-box;
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 14px 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 -1px 0 rgba(0,0,0,0.7);
+            background: -webkit-gradient(linear, left top, left bottom, from(#6d7d93), color-stop(0.5, #4c586c), color-stop(0.51, #3b4657), to(#2d3644));
+            border: 1px solid #1f2530;
+            border-radius: 8px;
+            -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 2px 4px rgba(0,0,0,0.5);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 2px 4px rgba(0,0,0,0.5);
+        }
+        .btn:active {
+            background: -webkit-gradient(linear, left top, left bottom, from(#2d3644), color-stop(0.5, #3b4657), color-stop(0.51, #4c586c), to(#6d7d93));
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Arcade 4S</h1>
+    </div>
+
+    <a href="games/airhockey.html" class="btn">Air Hockey</a>
+    <a href="games/pong.html" class="btn">Table Tennis</a>
+    <a href="games/snake.html" class="btn">Snake</a>
+    <a href="games/2048.html" class="btn">2048</a>
+
+    <a href="/public/index.html" class="btn" style="background:-webkit-gradient(linear, left top, left bottom, from(#888), to(#444)); border-color:#222; margin-top:15px;">◄ Back to Home</a>
+
+</body>
+</html>

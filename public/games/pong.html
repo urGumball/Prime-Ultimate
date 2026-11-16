@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Table Tennis 4S</title>
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <style>
+        * { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #000 url('https://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; color: #fff; font-family: "Helvetica Neue", sans-serif; padding: 8px; -webkit-user-select: none; }
+        .header { background: -webkit-gradient(linear, left top, left bottom, from(#b0b9c6), to(#4d5c71)); padding: 6px; border-radius: 6px 6px 0 0; text-align: center; margin-bottom: 8px; }
+        .header h1 { font-size: 14px; text-shadow: 0 -1px 0 #222; }
+        .arcade-cabinet { background: -webkit-gradient(linear, left top, left bottom, from(#3a4556), to(#1e242e)); border: 1px solid #4a5669; border-radius: 8px; padding: 6px; max-width: 320px; margin: 0 auto; text-align: center; }
+        canvas { display: block; margin: 0 auto; background: #000; border-radius: 4px; border: 2px solid #333; }
+        
+        .btn-ios {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 -1px 0 #000;
+            background: -webkit-gradient(linear, left top, left bottom, from(#6d7d93), color-stop(0.5, #4c586c), color-stop(0.51, #3b4657), to(#2d3644));
+            border: 1px solid #1f2530;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .btn-ios:active {
+            background: -webkit-gradient(linear, left top, left bottom, from(#2d3644), color-stop(0.5, #3b4657), color-stop(0.51, #4c586c), to(#6d7d93));
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header"><h1>Table Tennis 4S</h1></div>
+
+    <div class="arcade-cabinet">
+        <canvas id="table" width="280" height="340"></canvas>
+        <button class="btn-ios" onclick="resetRound()">↺ Restart Round</button>
+        <br>
+        <a href="../games.html" class="btn-ios" style="margin-top:4px;">◄ Back to Menu</a>
+    </div>
+
+    <script>
+        var canvas = document.getElementById('table');
+        var ctx = canvas.getContext('2d');
+
+        var paddleW = 60, paddleH = 10;
+        var playerX = (canvas.width - paddleW) / 2;
+        var aiX = (canvas.width - paddleW) / 2;
+        var ballX = canvas.width / 2, ballY = canvas.height / 2;
+        var ballVx = 3, ballVy = 3;
+        var playerScore = 0, aiScore = 0;
+
+        function update() {
+            ballX += ballVx;
+            ballY += ballVy;
+
+            // AI tracking
+            var aiCenter = aiX + paddleW / 2;
+            if (aiCenter < ballX - 8) aiX += 2.5;
+            else if (aiCenter > ballX + 8) aiX -= 2.5;
+
+            // Constrain AI paddle to court
+            if (aiX < 0) aiX = 0;
+            if (aiX > canvas.width - paddleW) aiX = canvas.width - paddleW;
+
+            // Walls
+            if (ballX <= 5 || ballX >= canvas.width - 5) ballVx = -ballVx;
+
+            // AI Paddle (Top)
+            if (ballY <= 20 + paddleH) {
+                if (ballX >= aiX && ballX <= aiX + paddleW) {
+                    ballVy = -ballVy;
+                    ballY = 20 + paddleH;
+                }
+            }
+
+            // Player Paddle (Bottom)
+            if (ballY >= canvas.height - 20 - paddleH) {
+                if (ballX >= playerX && ballX <= playerX + paddleW) {
+                    ballVy = -ballVy;
+                    ballY = canvas.height - 20 - paddleH;
+                }
+            }
+
+            // Scoring
+            if (ballY < 0) { playerScore++; resetBall(); }
+            else if (ballY > canvas.height) { aiScore++; resetBall(); }
+        }
+
+        function resetBall() {
+            ballX = canvas.width / 2;
+            ballY = canvas.height / 2;
+            ballVy = -ballVy;
+            aiX = (canvas.width - paddleW) / 2;
+        }
+
+        function resetRound() {
+            resetBall();
+            playerX = (canvas.width - paddleW) / 2;
+        }
+
+        function draw() {
+            ctx.fillStyle = "#000000";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Net
+            ctx.strokeStyle = "#333333";
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+            ctx.lineTo(canvas.width, canvas.height / 2);
+            ctx.stroke();
+
+            // Scores
+            ctx.fillStyle = "#666";
+            ctx.font = "16px Helvetica";
+            ctx.fillText(aiScore, 10, canvas.height / 2 - 10);
+            ctx.fillText(playerScore, 10, canvas.height / 2 + 22);
+
+            // AI Paddle
+            ctx.fillStyle = "#ff4444";
+            ctx.fillRect(aiX, 15, paddleW, paddleH);
+
+            // Player Paddle
+            ctx.fillStyle = "#00cc00";
+            ctx.fillRect(playerX, canvas.height - 15 - paddleH, paddleW, paddleH);
+
+            // Ball
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(ballX, ballY, 6, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function movePaddle(clientX) {
+            var rect = canvas.getBoundingClientRect();
+            var touchX = clientX - rect.left;
+            playerX = touchX - paddleW / 2;
+        }
+
+        canvas.addEventListener('touchmove', function(e) {
+            if (e.preventDefault) e.preventDefault();
+            movePaddle(e.touches[0].clientX);
+        }, false);
+
+        canvas.addEventListener('mousemove', function(e) {
+            movePaddle(e.clientX);
+        }, false);
+
+        setInterval(function() { update(); draw(); }, 1000 / 60);
+    </script>
+</body>
+</html>

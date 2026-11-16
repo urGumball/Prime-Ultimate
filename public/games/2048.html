@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2048 4S</title>
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <style>
+        * { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #000 url('https://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; color: #fff; font-family: "Helvetica Neue", sans-serif; padding: 8px; -webkit-user-select: none; }
+        .header { background: -webkit-gradient(linear, left top, left bottom, from(#b0b9c6), to(#4d5c71)); padding: 6px; border-radius: 6px 6px 0 0; text-align: center; margin-bottom: 8px; }
+        .header h1 { font-size: 14px; text-shadow: 0 -1px 0 #222; }
+        .arcade-cabinet { background: -webkit-gradient(linear, left top, left bottom, from(#3a4556), to(#1e242e)); border: 1px solid #4a5669; border-radius: 8px; padding: 8px; max-width: 300px; margin: 0 auto; text-align: center; }
+        canvas { display: block; margin: 0 auto; background: #bbada0; border-radius: 6px; }
+        .pad-btn { display: inline-block; width: 42px; height: 34px; line-height: 34px; font-size: 14px; font-weight: bold; color: #fff; background: -webkit-gradient(linear, left top, left bottom, from(#6d7d93), to(#2d3644)); border: 1px solid #1f2530; border-radius: 4px; margin: 2px; }
+        .btn-back { display: inline-block; margin-top: 8px; padding: 6px 14px; font-size: 11px; font-weight: bold; color: #fff; background: -webkit-gradient(linear, left top, left bottom, from(#6d7d93), to(#2d3644)); border: 1px solid #1f2530; border-radius: 4px; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header"><h1>2048 4S</h1></div>
+
+    <div class="arcade-cabinet">
+        <canvas id="board" width="260" height="260"></canvas>
+
+        <div style="margin-top: 8px;">
+            <div class="pad-btn" onclick="move('up')">▲</div><br>
+            <div class="pad-btn" onclick="move('left')">◄</div>
+            <div class="pad-btn" onclick="move('down')">▼</div>
+            <div class="pad-btn" onclick="move('right')">►</div>
+        </div>
+
+        <a href="../games.html" class="btn-back">◄ Back to Menu</a>
+    </div>
+
+    <script>
+        var canvas = document.getElementById('board');
+        var ctx = canvas.getContext('2d');
+        var grid = [
+            [0,0,0,0],
+            [0,0,0,0],
+            [0,0,0,0],
+            [0,0,0,0]
+        ];
+
+        function addTile() {
+            var empty = [];
+            for (var r = 0; r < 4; r++) {
+                for (var c = 0; c < 4; c++) {
+                    if (grid[r][c] === 0) empty.push({r: r, c: c});
+                }
+            }
+            if (empty.length > 0) {
+                var spot = empty[Math.floor(Math.random() * empty.length)];
+                grid[spot.r][spot.c] = Math.random() < 0.9 ? 2 : 4;
+            }
+        }
+
+        function slide(row) {
+            var arr = row.filter(function(val) { return val !== 0; });
+            for (var i = 0; i < arr.length - 1; i++) {
+                if (arr[i] === arr[i+1]) {
+                    arr[i] *= 2;
+                    arr[i+1] = 0;
+                }
+            }
+            arr = arr.filter(function(val) { return val !== 0; });
+            while (arr.length < 4) arr.push(0);
+            return arr;
+        }
+
+        function move(dir) {
+            var changed = false;
+            var r, c;
+            if (dir === 'left') {
+                for (r = 0; r < 4; r++) {
+                    var res = slide(grid[r]);
+                    if (res.join(',') !== grid[r].join(',')) changed = true;
+                    grid[r] = res;
+                }
+            } else if (dir === 'right') {
+                for (r = 0; r < 4; r++) {
+                    var rev = grid[r].slice().reverse();
+                    var resR = slide(rev).reverse();
+                    if (resR.join(',') !== grid[r].join(',')) changed = true;
+                    grid[r] = resR;
+                }
+            } else if (dir === 'up') {
+                for (c = 0; c < 4; c++) {
+                    var col = [grid[0][c], grid[1][c], grid[2][c], grid[3][c]];
+                    var resU = slide(col);
+                    for (r = 0; r < 4; r++) {
+                        if (grid[r][c] !== resU[r]) changed = true;
+                        grid[r][c] = resU[r];
+                    }
+                }
+            } else if (dir === 'down') {
+                for (c = 0; c < 4; c++) {
+                    var colD = [grid[0][c], grid[1][c], grid[2][c], grid[3][c]].reverse();
+                    var resD = slide(colD).reverse();
+                    for (r = 0; r < 4; r++) {
+                        if (grid[r][c] !== resD[r]) changed = true;
+                        grid[r][c] = resD[r];
+                    }
+                }
+            }
+            if (changed) { addTile(); draw(); }
+        }
+
+        function draw() {
+            ctx.fillStyle = "#bbada0";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            var colors = {
+                2: "#eee4da", 4: "#ece0ca", 8: "#f2b179", 16: "#f59563",
+                32: "#f67c5f", 64: "#f65e3b", 128: "#edcf72", 256: "#edcc61"
+            };
+
+            for (var r = 0; r < 4; r++) {
+                for (var c = 0; c < 4; c++) {
+                    var val = grid[r][c];
+                    var x = c * 62 + 10;
+                    var y = r * 62 + 10;
+
+                    ctx.fillStyle = colors[val] || (val > 0 ? "#edc850" : "#ccc0b3");
+                    ctx.fillRect(x, y, 54, 54);
+
+                    if (val > 0) {
+                        ctx.fillStyle = val <= 4 ? "#776e65" : "#ffffff";
+                        ctx.font = "bold 18px Helvetica";
+                        ctx.textAlign = "center";
+                        ctx.fillText(val, x + 27, y + 33);
+                    }
+                }
+            }
+        }
+
+        // Initial setup
+        addTile();
+        addTile();
+        draw();
+    </script>
+</body>
+</html>

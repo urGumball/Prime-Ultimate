@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <title>Weather</title>
+    <style>
+        * { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #000 url('https://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; color: #fff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 10px; }
+
+        .weather-card {
+            background: -webkit-gradient(linear, left top, left bottom, from(#3a4556), to(#1e242e));
+            border: 1px solid #4a5669;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 8px rgba(0,0,0,0.6);
+            margin-top: 20px;
+        }
+        .temp { font-size: 48px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8); margin: 10px 0; }
+        .condition { font-size: 14px; color: #b0c0d0; text-transform: uppercase; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+    <div class="weather-card">
+        <div id="city" style="font-size: 18px; font-weight: bold;">Locating 4S...</div>
+        <div id="temp" class="temp">--°C</div>
+        <div id="condition" class="condition">Fetching data...</div>
+    </div>
+
+    <script>
+        function getWeather(lat, lon) {
+            var xhr = new XMLHttpRequest();
+            var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true';
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    var cw = data.current_weather;
+                    document.getElementById('temp').innerText = cw.temperature + '°C';
+                    document.getElementById('condition').innerText = 'Wind: ' + cw.windspeed + ' km/h';
+                    document.getElementById('city').innerText = 'Current Location';
+                }
+            };
+            xhr.send();
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                getWeather(pos.coords.latitude, pos.coords.longitude);
+            }, function() {
+                // Default London fallback if GPS is denied
+                getWeather(51.5074, -0.1278);
+            });
+        } else {
+            getWeather(51.5074, -0.1278);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <title>Insta 2011</title>
+    <style>
+        * { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: #000 url('https://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; 
+            color: #fff; 
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+            padding: 8px; 
+        }
+
+        /* Classic Blue Skeuomorphic Instagram Bar */
+        .header {
+            background: -webkit-gradient(linear, left top, left bottom, from(#4c688b), color-stop(0.5, #354f72), to(#243a56));
+            border-bottom: 1px solid #1a2a3f;
+            padding: 8px 10px;
+            border-radius: 6px 6px 0 0;
+            -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .header h1 { font-size: 16px; color: #fff; text-shadow: 0 -1px 0 #111; }
+
+        /* Photo Stream Cards */
+        .post-card {
+            background: #fff;
+            border-radius: 6px;
+            border: 1px solid #999;
+            margin-bottom: 12px;
+            color: #000;
+            overflow: hidden;
+            -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.6);
+        }
+        .post-user {
+            padding: 8px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #f5f5f5;
+            border-bottom: 1px solid #eee;
+        }
+        .post-user span { color: #888; font-weight: normal; font-size: 10px; float: right; }
+        .post-img { width: 100%; height: auto; display: block; border-bottom: 1px solid #eee; }
+        .post-actions { padding: 8px 10px; }
+        
+        .like-btn {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+            background: -webkit-gradient(linear, left top, left bottom, from(#d84b4b), to(#8c1515));
+            border: 1px solid #500;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .like-count { font-size: 11px; font-weight: bold; color: #333; margin-top: 5px; }
+        .caption { font-size: 11px; color: #444; margin-top: 4px; line-height: 1.3; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Insta 4S</h1>
+    </div>
+
+    <!-- Feed Container -->
+    <div id="feed"></div>
+
+    <script>
+        var DEMO_POSTS = [
+            {
+                id: 1,
+                user: 'retro_collector',
+                time: '2h ago',
+                img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80',
+                caption: 'Testing out the web suite on the original iPhone 4S! 📱✨',
+                likes: 42
+            },
+            {
+                id: 2,
+                user: 'steve_jobs_fan',
+                time: '5h ago',
+                img: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&q=80',
+                caption: 'Skeuomorphism was peak design era.',
+                likes: 128
+            }
+        ];
+
+        function toggleLike(id, btnEl, countEl) {
+            for (var i = 0; i < DEMO_POSTS.length; i++) {
+                if (DEMO_POSTS[i].id === id) {
+                    if (btnEl.getAttribute('data-liked') === 'true') {
+                        DEMO_POSTS[i].likes--;
+                        btnEl.setAttribute('data-liked', 'false');
+                        btnEl.innerText = '♥ Like';
+                    } else {
+                        DEMO_POSTS[i].likes++;
+                        btnEl.setAttribute('data-liked', 'true');
+                        btnEl.innerText = '♥ Liked';
+                    }
+                    countEl.innerText = DEMO_POSTS[i].likes + ' likes';
+                    break;
+                }
+            }
+        }
+
+        function renderFeed() {
+            var container = document.getElementById('feed');
+            container.innerHTML = '';
+
+            for (var i = 0; i < DEMO_POSTS.length; i++) {
+                var p = DEMO_POSTS[i];
+                var card = document.createElement('div');
+                card.className = 'post-card';
+
+                card.innerHTML = 
+                    '<div class="post-user">' + p.user + ' <span>' + p.time + '</span></div>' +
+                    '<img class="post-img" src="' + p.img + '">' +
+                    '<div class="post-actions">' +
+                        '<button class="like-btn" id="likeBtn_' + p.id + '" data-liked="false">♥ Like</button>' +
+                        '<div class="like-count" id="likeCount_' + p.id + '">' + p.likes + ' likes</div>' +
+                        '<div class="caption"><b>' + p.user + '</b> ' + p.caption + '</div>' +
+                    '</div>';
+
+                container.appendChild(card);
+
+                (function(postId) {
+                    var btn = document.getElementById('likeBtn_' + postId);
+                    var cnt = document.getElementById('likeCount_' + postId);
+                    btn.onclick = function() { toggleLike(postId, btn, cnt); };
+                })(p.id);
+            }
+        }
+
+        window.onload = renderFeed;
+    </script>
+</body>
+</html>

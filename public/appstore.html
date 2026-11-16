@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <title>App Store 4S</title>
+    <style>
+        * { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: #b0b9c6 url('https://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; 
+            color: #333; 
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+            padding-bottom: 50px;
+            -webkit-user-select: none;
+        }
+
+        /* iOS 5 App Store Header */
+        .header {
+            background: -webkit-gradient(linear, left top, left bottom, from(#b0b9c6), color-stop(0.05, #8e9cb0), color-stop(0.5, #6d7d93), color-stop(0.51, #57677d), to(#4d5c71));
+            border-bottom: 1px solid #2e3540;
+            padding: 8px 10px;
+            -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+            text-align: center;
+        }
+        .header h1 { font-size: 16px; text-shadow: 0 -1px 0 #222; color: #fff; margin: 0; }
+
+        /* App List Container */
+        .store-list {
+            background: #fff;
+            margin: 10px;
+            border-radius: 8px;
+            border: 1px solid #888;
+            -webkit-box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .app-row {
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            display: -webkit-box;
+            -webkit-box-align: center;
+            background: #fff;
+        }
+        .app-row:last-child { border-bottom: none; }
+        .app-row:active { background: #f0f4f8; }
+
+        /* Icon Styling with Skeuomorphic Gloss Effect */
+        .app-icon {
+            width: 57px;
+            height: 57px;
+            border-radius: 10px;
+            margin-right: 12px;
+            background-size: cover;
+            border: 1px solid rgba(0,0,0,0.3);
+            -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+            display: inline-block;
+            text-align: center;
+            line-height: 57px;
+            font-size: 24px;
+            color: #fff;
+        }
+
+        .app-info { -webkit-box-flex: 1; overflow: hidden; }
+        .app-title { font-size: 14px; font-weight: bold; color: #000; margin-bottom: 2px; }
+        .app-category { font-size: 11px; color: #666; margin-bottom: 4px; }
+        .app-desc { font-size: 10px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Glossy GET / OPEN Button */
+        .btn-action {
+            display: inline-block;
+            padding: 5px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 -1px 0 rgba(0,0,0,0.6);
+            background: -webkit-gradient(linear, left top, left bottom, from(#4bd84b), to(#158c15));
+            border: 1px solid #050;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .btn-action:active {
+            background: -webkit-gradient(linear, left top, left bottom, from(#158c15), to(#4bd84b));
+        }
+        .btn-action.installed {
+            background: -webkit-gradient(linear, left top, left bottom, from(#6d7d93), color-stop(0.5, #4c586c), color-stop(0.51, #3b4657), to(#2d3644));
+            border-color: #1f2530;
+        }
+
+        /* iOS 5 Tab Bar */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 48px;
+            background: -webkit-gradient(linear, left top, left bottom, from(#333), to(#111));
+            border-top: 1px solid #444;
+            display: -webkit-box;
+            text-align: center;
+        }
+        .tab-item {
+            -webkit-box-flex: 1;
+            color: #888;
+            font-size: 10px;
+            padding-top: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .tab-item.active { color: #007aff; }
+        .tab-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>App Store</h1>
+    </div>
+
+    <!-- Store Directory -->
+    <div class="store-list" id="appDirectory"></div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="tab-bar">
+        <a href="#" class="tab-item active"><span class="tab-icon">★</span>Featured</a>
+        <a href="#" class="tab-item"><span class="tab-icon">📋</span>Categories</a>
+        <a href="index.html" class="tab-item"><span class="tab-icon">🏠</span>Home</a>
+    </div>
+
+    <script>
+        var AVAILABLE_APPS = [
+            {
+                id: 'fourstube',
+                name: 'FoursTube',
+                category: 'Entertainment',
+                desc: 'Retro YouTube player with quota saver & failover.',
+                iconBg: '-webkit-gradient(linear, left top, left bottom, from(#e52d27), to(#b31217))',
+                symbol: '▶',
+                url: 'youtube.html'
+            },
+            {
+                id: 'arcade',
+                name: 'Arcade Studio',
+                category: 'Games',
+                desc: 'Ping Pong, Air Hockey, Snake & 2048 collection.',
+                iconBg: '-webkit-gradient(linear, left top, left bottom, from(#3a4556), to(#1e242e))',
+                symbol: '🕹️',
+                url: 'games.html'
+            },
+            {
+                id: 'chat',
+                name: 'Chat Studio',
+                category: 'Social Networking',
+                desc: 'Lightweight multi-server web chat interface.',
+                iconBg: '-webkit-gradient(linear, left top, left bottom, from(#5865F2), to(#3b47c6))',
+                symbol: '💬',
+                url: 'discord.html'
+            },
+            {
+                id: 'notes',
+                name: 'Notes 4S',
+                category: 'Productivity',
+                desc: 'Skeuomorphic notepad with local persistent storage.',
+                iconBg: '-webkit-gradient(linear, left top, left bottom, from(#ffeb60), to(#d4b800))',
+                symbol: '📝',
+                url: 'notes.html'
+            }
+        ];
+
+        function getInstalledApps() {
+            try {
+                var stored = localStorage.getItem('4s_installed_apps');
+                return stored ? JSON.parse(stored) : ['fourstube', 'arcade'];
+            } catch(e) {
+                return ['fourstube', 'arcade'];
+            }
+        }
+
+        function toggleInstall(appId) {
+            var installed = getInstalledApps();
+            var index = installed.indexOf(appId);
+            
+            if (index > -1) {
+                installed.splice(index, 1); // Uninstall
+            } else {
+                installed.push(appId); // Install
+            }
+
+            try {
+                localStorage.setItem('4s_installed_apps', JSON.stringify(installed));
+            } catch(e) {}
+
+            renderStore();
+        }
+
+        function renderStore() {
+            var container = document.getElementById('appDirectory');
+            container.innerHTML = '';
+            var installed = getInstalledApps();
+
+            for (var i = 0; i < AVAILABLE_APPS.length; i++) {
+                var app = AVAILABLE_APPS[i];
+                var isInstalled = installed.indexOf(app.id) > -1;
+
+                var row = document.createElement('div');
+                row.className = 'app-row';
+
+                row.innerHTML = 
+                    '<div class="app-icon" style="background: ' + app.iconBg + ';">' + app.symbol + '</div>' +
+                    '<div class="app-info">' +
+                        '<div class="app-title">' + app.name + '</div>' +
+                        '<div class="app-category">' + app.category + '</div>' +
+                        '<div class="app-desc">' + app.desc + '</div>' +
+                    '</div>' +
+                    '<div>' +
+                        (isInstalled ? 
+                            '<a href="' + app.url + '" class="btn-action installed">OPEN</a>' : 
+                            '<button onclick="toggleInstall(\'' + app.id + '\')" class="btn-action">GET</button>') +
+                    '</div>';
+
+                container.appendChild(row);
+            }
+        }
+
+        window.onload = function() {
+            renderStore();
+        };
+    </script>
+</body>
+</html>
