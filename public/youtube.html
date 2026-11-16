@@ -8,20 +8,20 @@
     <title>FoursTube 4S</title>
     <style>
         * { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #000 url('https://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; color: #fff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 8px; }
+        body { background: #000 url('https://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; color: #fff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 6px; }
         
         .header {
             background: -webkit-gradient(linear, left top, left bottom, from(#b0b9c6), color-stop(0.05, #8e9cb0), color-stop(0.5, #6d7d93), color-stop(0.51, #57677d), to(#4d5c71));
             border-bottom: 1px solid #2e3540;
-            padding: 8px 10px;
+            padding: 6px 8px;
             border-radius: 6px 6px 0 0;
             -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
-        .header h1 { font-size: 15px; text-shadow: 0 -1px 0 #222; text-align: center; color: #fff; }
+        .header h1 { font-size: 14px; text-shadow: 0 -1px 0 #222; text-align: center; color: #fff; }
 
-        .control-bar { text-align: center; margin-bottom: 8px; }
+        .control-bar { text-align: center; margin-bottom: 6px; }
 
         .btn-ios {
             display: inline-block;
@@ -51,72 +51,72 @@
             border-color: #3b0550;
         }
 
-        .search-box { margin-bottom: 8px; }
-        .search-input { width: 72%; padding: 6px; background: #fff; border: 1px solid #333; font-size: 12px; border-radius: 4px; color:#000; }
+        .search-box { margin-bottom: 6px; }
+        .search-input { width: 72%; padding: 5px; background: #fff; border: 1px solid #333; font-size: 11px; border-radius: 4px; color:#000; }
         .btn-search {
-            width: 24%; float: right; padding: 6px;
+            width: 24%; float: right; padding: 5px;
             background: -webkit-gradient(linear, left top, left bottom, from(#d84b4b), to(#8c1515));
             border-color: #500;
         }
 
-        .player-wrap { width: 100%; height: 200px; background: #000; margin-bottom: 8px; display: none; border: 1px solid #444; border-radius: 6px; }
+        .player-wrap { width: 100%; height: 180px; background: #000; margin-bottom: 6px; display: none; border: 1px solid #444; border-radius: 6px; }
         iframe { width: 100%; height: 100%; border: none; border-radius: 6px; }
 
-        .section-header { font-size: 12px; font-weight: bold; color: #fff; text-shadow: 0 1px 1px #000; margin: 10px 0 4px 2px; }
+        .section-header { font-size: 11px; font-weight: bold; color: #fff; text-shadow: 0 1px 1px #000; margin: 8px 0 4px 2px; }
 
         /* User Profile Ribbon */
-        .user-bar { background: #1c222d; border: 1px solid #3b4657; border-radius: 6px; padding: 6px 8px; margin-bottom: 8px; display: -webkit-box; -webkit-box-align: center; }
+        .user-bar { background: #1c222d; border: 1px solid #3b4657; border-radius: 6px; padding: 5px 6px; margin-bottom: 6px; display: -webkit-box; -webkit-box-align: center; }
         .user-clickable { display: -webkit-box; -webkit-box-align: center; -webkit-box-flex: 1; cursor: pointer; }
-        .user-avatar { width: 32px; height: 32px; border-radius: 16px; margin-right: 8px; border: 1px solid #aaa; background: #555; object-fit: cover; }
-        .user-info { -webkit-box-flex: 1; font-size: 11px; }
-        .user-handle { font-size: 9px; color: #aaa; }
-        .admin-badge { background: #900c3f; color: #fff; font-size: 8px; font-weight: bold; padding: 1px 4px; border-radius: 3px; margin-left: 4px; display: inline-block; }
+        .user-avatar { width: 28px; height: 28px; border-radius: 14px; margin-right: 6px; border: 1px solid #aaa; background: #555; object-fit: cover; }
+        .user-info { -webkit-box-flex: 1; font-size: 10px; }
+        .user-handle { font-size: 8px; color: #aaa; }
+        .admin-badge { background: #900c3f; color: #fff; font-size: 7px; font-weight: bold; padding: 1px 3px; border-radius: 3px; margin-left: 3px; display: inline-block; }
 
         /* Video Lists */
-        .list-container { background: #fff; border-radius: 6px; border: 1px solid #999; overflow: hidden; margin-bottom: 8px; }
-        .card { padding: 8px; border-bottom: 1px solid #e0e0e0; cursor: pointer; color: #000; background: #fff; }
+        .list-container { background: #fff; border-radius: 6px; border: 1px solid #999; overflow: hidden; margin-bottom: 6px; }
+        .card { padding: 6px; border-bottom: 1px solid #e0e0e0; cursor: pointer; color: #000; background: #fff; }
         .card:last-child { border-bottom: none; }
         .card:active { background: #0275d8; color: #fff; }
-        .card img { width: 76px; height: 50px; float: left; margin-right: 8px; border-radius: 3px; background: #222; object-fit: cover; }
-        .card-title { font-size: 11px; font-weight: bold; line-height: 1.25; height: 28px; overflow: hidden; }
-        .card-meta { font-size: 9px; color: #666; margin-top: 3px; }
+        .card img { width: 70px; height: 46px; float: left; margin-right: 6px; border-radius: 3px; background: #222; object-fit: cover; }
+        .card-title { font-size: 10px; font-weight: bold; line-height: 1.2; height: 24px; overflow: hidden; }
+        .card-meta { font-size: 8px; color: #666; margin-top: 2px; }
         .card:active .card-meta { color: #ddd; }
 
         /* Shorts Grid */
-        .shorts-container { display: -webkit-box; overflow-x: auto; margin-bottom: 8px; padding-bottom: 6px; }
-        .short-card { width: 95px; margin-right: 6px; background: #fff; color: #000; border-radius: 6px; padding: 4px; border: 1px solid #999; cursor: pointer; }
-        .short-card img { width: 100%; height: 115px; border-radius: 4px; object-fit: cover; background: #222; }
-        .short-title { font-size: 9px; font-weight: bold; height: 32px; overflow: hidden; margin-top: 4px; line-height: 1.15; word-wrap: break-word; }
+        .shorts-container { display: -webkit-box; overflow-x: auto; margin-bottom: 6px; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+        .short-card { width: 85px; margin-right: 5px; background: #fff; color: #000; border-radius: 6px; padding: 3px; border: 1px solid #999; cursor: pointer; }
+        .short-card img { width: 100%; height: 100px; border-radius: 4px; object-fit: cover; background: #222; }
+        .short-title { font-size: 8px; font-weight: bold; height: 26px; overflow: hidden; margin-top: 2px; line-height: 1.1; word-wrap: break-word; }
 
         /* Comments Box */
-        .comments-section { background: #fff; color: #000; border-radius: 6px; padding: 8px; margin-top: 8px; border: 1px solid #999; }
-        .comment-item { padding: 5px 0; border-bottom: 1px solid #eee; font-size: 10px; }
+        .comments-section { background: #fff; color: #000; border-radius: 6px; padding: 6px; margin-top: 6px; border: 1px solid #999; }
+        .comment-item { padding: 4px 0; border-bottom: 1px solid #eee; font-size: 9px; }
         .comment-item:last-child { border-bottom: none; }
         .comment-author { font-weight: bold; color: #0275d8; }
-        .comment-input { width: 70%; padding: 4px; font-size: 11px; border: 1px solid #ccc; border-radius: 3px; }
+        .comment-input { width: 68%; padding: 3px; font-size: 10px; border: 1px solid #ccc; border-radius: 3px; }
 
         /* Skeleton Loading UI */
-        .skeleton-card { padding: 8px; border-bottom: 1px solid #eee; background: #fff; }
-        .sk-thumb { width: 76px; height: 50px; float: left; background: #e0e0e0; border-radius: 3px; }
-        .sk-line { height: 10px; background: #e0e0e0; margin-bottom: 6px; border-radius: 2px; }
+        .skeleton-card { padding: 6px; border-bottom: 1px solid #eee; background: #fff; }
+        .sk-thumb { width: 70px; height: 46px; float: left; background: #e0e0e0; border-radius: 3px; }
+        .sk-line { height: 9px; background: #e0e0e0; margin-bottom: 5px; border-radius: 2px; }
         .sk-line.short { width: 50%; }
-        .sk-body { margin-left: 84px; }
+        .sk-body { margin-left: 78px; }
 
-        /* iOS 5 Modals - Reduced heights & padded scrolling for small 3.5" screens */
+        /* Fixed iOS 5 Modals - Fully Scrollable & Scaled for 3.5" Screen */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7); display: none; -webkit-box-pack: center; -webkit-box-align: center;
-            z-index: 999; padding: 8px;
+            background: rgba(0,0,0,0.75); display: none; -webkit-box-pack: center; -webkit-box-align: center;
+            z-index: 999; padding: 6px;
         }
         .modal-card {
-            background: #2d3644; border: 1px solid #57677d; border-radius: 8px;
-            width: 100%; max-width: 300px; max-height: 75vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+            background: #2d3644; border: 1px solid #57677d; border-radius: 6px;
+            width: 100%; max-width: 290px; max-height: 65vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
             padding: 8px; -webkit-box-shadow: 0 4px 15px rgba(0,0,0,0.8); color: #fff;
         }
-        .modal-header { font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 6px; border-bottom: 1px solid #444; padding-bottom: 4px; }
-        .modal-item { background: #fff; color: #000; padding: 6px; border-radius: 4px; margin-bottom: 4px; font-size: 10px; cursor: pointer; }
+        .modal-header { font-size: 12px; font-weight: bold; text-align: center; margin-bottom: 6px; border-bottom: 1px solid #444; padding-bottom: 4px; }
+        .modal-item { background: #fff; color: #000; padding: 5px; border-radius: 4px; margin-bottom: 4px; font-size: 10px; cursor: pointer; }
         .modal-item:active { background: #0275d8; color: #fff; }
-        .modal-input { width: 100%; padding: 4px 6px; font-size: 11px; margin-bottom: 6px; border-radius: 4px; border: 1px solid #ccc; color: #000; }
+        .modal-input { width: 100%; padding: 4px; font-size: 11px; margin-bottom: 6px; border-radius: 4px; border: 1px solid #ccc; color: #000; }
         .modal-label { font-size: 9px; color: #aaa; margin-bottom: 2px; text-align: center; }
 
         /* Compact Default PFP Picker Grid */
@@ -130,11 +130,10 @@
             -webkit-flex-wrap: wrap;
             flex-wrap: wrap;
             margin-bottom: 6px;
-            padding-bottom: 2px;
         }
         .pfp-opt {
-            width: 34px; height: 34px;
-            border-radius: 17px;
+            width: 32px; height: 32px;
+            border-radius: 16px;
             border: 2px solid #555;
             margin: 2px;
             cursor: pointer;
@@ -143,9 +142,9 @@
         }
         .pfp-opt.selected { border-color: #4bd84b; -webkit-box-shadow: 0 0 6px #4bd84b; }
 
-        .profile-view { text-align: center; margin-bottom: 8px; }
-        .profile-view img { width: 50px; height: 50px; border-radius: 25px; border: 2px solid #fff; margin: 0 auto 4px auto; display: block; object-fit: cover; }
-        .history-box { max-height: 110px; overflow-y: auto; background: #fff; border-radius: 4px; color: #000; font-size: 9px; }
+        .profile-view { text-align: center; margin-bottom: 6px; }
+        .profile-view img { width: 44px; height: 44px; border-radius: 22px; border: 2px solid #fff; margin: 0 auto 4px auto; display: block; object-fit: cover; }
+        .history-box { max-height: 90px; overflow-y: auto; background: #fff; border-radius: 4px; color: #000; font-size: 9px; -webkit-overflow-scrolling: touch; }
 
         .clear { clear: both; }
     </style>
@@ -187,7 +186,7 @@
         <div class="clear"></div>
     </form>
 
-    <div id="status" style="font-size:10px; color:#aaa; margin-bottom:6px; text-align:center;"></div>
+    <div id="status" style="font-size:9px; color:#aaa; margin-bottom:4px; text-align:center;"></div>
 
     <div id="contentArea"></div>
 
@@ -201,36 +200,33 @@
         </div>
     </div>
 
-    <!-- Modal 2: Create Channel (Sized down for 3.5" Screen) -->
+    <!-- Modal 2: Create Channel -->
     <div class="modal-overlay" id="createModal">
         <div class="modal-card">
             <div class="modal-header">Create Channel</div>
             <div class="modal-label">Channel Name</div>
             <input type="text" id="cNameInput" class="modal-input" placeholder="Channel Name">
-            <div class="modal-label">Handle (min 3 chars, letters/numbers only)</div>
+            <div class="modal-label">Handle (min 3 chars)</div>
             <input type="text" id="cHandleInput" class="modal-input" placeholder="e.g. techguy4s">
             
-            <div class="modal-label">Select Default Profile Picture</div>
+            <div class="modal-label">Select Default PFP</div>
             <div class="pfp-picker" id="pfpPickerRow"></div>
 
-            <!-- Custom PFP Mode Toggle -->
             <div style="text-align: center; margin: 4px 0;">
                 <button type="button" class="btn-ios" id="btnTogglePfpMode" onclick="togglePfpInputMode('create')">Switch to File Upload</button>
             </div>
 
-            <!-- URL Mode -->
             <div id="pfpUrlGroup">
                 <div class="modal-label">PFP Image Link</div>
                 <input type="text" id="cPfpInput" class="modal-input" placeholder="https://...">
             </div>
 
-            <!-- File Upload Explorer Mode -->
             <div id="pfpFileGroup" style="display:none;">
                 <div class="modal-label">Choose Image from Device</div>
                 <input type="file" id="cFileInput" class="modal-input" accept="image/*" onchange="handleFileUpload(event, 'create')">
             </div>
 
-            <div class="modal-label">Channel Password (Optional)</div>
+            <div class="modal-label">Password (Optional)</div>
             <input type="password" id="cPassInput" class="modal-input" placeholder="Password">
             <button class="btn-ios active" style="width:100%; padding:6px; margin-bottom:4px;" onclick="submitNewChannel()">Create</button>
             <button class="btn-ios" style="width:100%; padding:5px;" onclick="closeModal('createModal')">Cancel</button>
@@ -241,7 +237,7 @@
     <div class="modal-overlay" id="passModal">
         <div class="modal-card">
             <div class="modal-header" id="passPromptTitle">Enter Password</div>
-            <div id="passPromptSub" style="font-size:10px; color:#aaa; text-align:center; margin-bottom:8px;"></div>
+            <div id="passPromptSub" style="font-size:9px; color:#aaa; text-align:center; margin-bottom:6px;"></div>
             <input type="password" id="passModalInput" class="modal-input" placeholder="Password">
             <button class="btn-ios active" style="width:100%; padding:6px; margin-bottom:4px;" onclick="submitPassModal()">Unlock</button>
             <button class="btn-ios" style="width:100%; padding:5px;" onclick="closeModal('passModal')">Cancel</button>
@@ -254,13 +250,13 @@
             <div class="modal-header">My Channel</div>
             <div class="profile-view">
                 <img id="profPic" src="">
-                <div id="profTitle" style="font-weight:bold; font-size:12px;"></div>
-                <div id="profHandle" style="font-size:9px; color:#aaa;"></div>
-                <div id="profCreated" style="font-size:8px; color:#888; margin-top:2px;"></div>
+                <div id="profTitle" style="font-weight:bold; font-size:11px;"></div>
+                <div id="profHandle" style="font-size:8px; color:#aaa;"></div>
+                <div id="profCreated" style="font-size:8px; color:#888; margin-top:1px;"></div>
             </div>
             <div class="section-header">Watch History</div>
             <div class="history-box" id="profHistoryList"></div>
-            <button class="btn-ios" id="profBadgeToggleBtn" style="width:100%; padding:5px; margin-top:6px; display:none;" onclick="toggleMyBadge()">Remove Admin Status</button>
+            <button class="btn-ios" id="profBadgeToggleBtn" style="width:100%; padding:5px; margin-top:4px; display:none;" onclick="toggleMyBadge()">Remove Admin Status</button>
             <button class="btn-ios" style="width:100%; padding:5px; margin-top:4px;" onclick="closeModal('profileModal')">Close</button>
         </div>
     </div>
@@ -289,22 +285,18 @@
     <div class="modal-overlay" id="editPfpModal">
         <div class="modal-card">
             <div class="modal-header">Change Profile Picture</div>
-            
             <div class="modal-label">Select Default Profile Picture</div>
             <div class="pfp-picker" id="editPfpPickerRow"></div>
 
-            <!-- Custom PFP Mode Toggle -->
             <div style="text-align: center; margin: 4px 0;">
                 <button type="button" class="btn-ios" id="btnToggleEditPfpMode" onclick="togglePfpInputMode('edit')">Switch to File Upload</button>
             </div>
 
-            <!-- URL Mode -->
             <div id="editPfpUrlGroup">
                 <div class="modal-label">Or PFP Image Link</div>
                 <input type="text" id="editPfpInput" class="modal-input" placeholder="https://...">
             </div>
 
-            <!-- File Upload Explorer Mode -->
             <div id="editPfpFileGroup" style="display:none;">
                 <div class="modal-label">Or Choose Image from Device</div>
                 <input type="file" id="editFileInput" class="modal-input" accept="image/*" onchange="handleFileUpload(event, 'edit')">
@@ -320,7 +312,7 @@
         <div class="modal-card">
             <div class="modal-header">Admin Suite (matt-djs-24)</div>
             <button class="btn-ios active" style="width:100%; padding:5px; margin-bottom:4px;" onclick="adminGenerateFakes()">+ Spawn 3 Demo Channels</button>
-            <div class="modal-label">Channel Controls (Click to manage):</div>
+            <div class="modal-label">Channel Controls:</div>
             <div id="adminAccList"></div>
             <button class="btn-ios danger" style="width:100%; padding:5px; margin-top:4px;" onclick="adminClearAll()">Clear All Accounts</button>
             <button class="btn-ios" style="width:100%; padding:5px; margin-top:4px;" onclick="closeModal('adminModal')">Exit Admin</button>
@@ -349,13 +341,13 @@
         var uploadedCustomPfp = "";
         var uploadedEditCustomPfp = "";
 
-        // Direct static image URLs optimized for retro iOS 5 Safari SSL compatibility
+        // Standard static images natively supported by vintage Safari SSL
         var DEFAULT_PFPS = [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Honkai_Star_Rail_Icon.png/240px-Honkai_Star_Rail_Icon.png",
             "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Android_home_icon.svg/240px-Android_home_icon.svg.png",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/External_link_font_awesome.svg/240px-External_link_font_awesome.svg.png",
             "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/240px-Apple_logo_black.svg.png",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Icon_Planet.svg/240px-Icon_Planet.svg.png"
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/External_link_font_awesome.svg/240px-External_link_font_awesome.svg.png",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Icon_Planet.svg/240px-Icon_Planet.svg.png",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Honkai_Star_Rail_Icon.png/240px-Honkai_Star_Rail_Icon.png"
         ];
         var selectedDefaultPfp = DEFAULT_PFPS[0];
         var selectedEditDefaultPfp = DEFAULT_PFPS[0];
@@ -587,11 +579,11 @@
                 for (var i = 0; i < history.length; i++) {
                     var item = history[i];
                     var div = document.createElement('div');
-                    div.style.padding = '6px';
+                    div.style.padding = '5px';
                     div.style.borderBottom = '1px solid #eee';
                     div.style.cursor = 'pointer';
                     div.onclick = (function(vid){ return function(){ closeModal('profileModal'); playVideo(vid); }; })(item.id);
-                    div.innerHTML = '<b>' + item.title + '</b><br><span style="color:#666; font-size:9px;">' + item.time + '</span>';
+                    div.innerHTML = '<b>' + item.title + '</b><br><span style="color:#666; font-size:8px;">' + item.time + '</span>';
                     hList.appendChild(div);
                 }
             }
@@ -964,14 +956,16 @@
             xhr.send();
         }
 
-        // Updated Video Playback mechanism using native YouTube Embed URL format for iOS 5 Safari
+        // Updated Video Playback handler formatted for iOS 5 WebKit compatibility
         function playVideo(id, title) {
             activeVideoId = id;
             if (title) recordWatchHistory(id, title);
             var wrap = document.getElementById('playerWrap');
             var player = document.getElementById('ytPlayer');
             wrap.style.display = 'block';
-            player.src = 'https://www.youtube-nocookie.com/embed/' + id + '?playsinline=1';
+            
+            // Standard HTML5 YouTube iframe embed parameters tailored for iOS 5 Safari handoff
+            player.src = 'https://www.youtube.com/embed/' + id + '?playsinline=1&rel=0&enablejsapi=1';
             window.scrollTo(0, 0);
             showComments(id);
         }
@@ -1024,7 +1018,7 @@
             }
 
             var form = document.createElement('form');
-            form.style.marginTop = '8px';
+            form.style.marginTop = '6px';
             form.onsubmit = function(e) {
                 if (e && e.preventDefault) e.preventDefault();
                 var inp = document.getElementById('cInput');
@@ -1041,7 +1035,7 @@
             };
 
             form.innerHTML = '<input type="text" id="cInput" class="comment-input" placeholder="Add a comment..." required> ' +
-                             '<button type="submit" class="btn-ios" style="padding:4px 8px;">Post</button>';
+                             '<button type="submit" class="btn-ios" style="padding:3px 6px;">Post</button>';
             section.appendChild(form);
 
             document.getElementById('contentArea').appendChild(section);
