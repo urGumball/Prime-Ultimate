@@ -102,24 +102,24 @@
         .sk-line.short { width: 50%; }
         .sk-body { margin-left: 84px; }
 
-        /* iOS 5 Modals */
+        /* iOS 5 Modals - Reduced heights & padded scrolling for small 3.5" screens */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.7); display: none; -webkit-box-pack: center; -webkit-box-align: center;
-            z-index: 999; padding: 12px;
+            z-index: 999; padding: 8px;
         }
         .modal-card {
             background: #2d3644; border: 1px solid #57677d; border-radius: 8px;
-            width: 100%; max-width: 320px; max-height: 85vh; overflow-y: auto;
-            padding: 10px; -webkit-box-shadow: 0 4px 15px rgba(0,0,0,0.8); color: #fff;
+            width: 100%; max-width: 300px; max-height: 75vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+            padding: 8px; -webkit-box-shadow: 0 4px 15px rgba(0,0,0,0.8); color: #fff;
         }
-        .modal-header { font-size: 14px; font-weight: bold; text-align: center; margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 6px; }
-        .modal-item { background: #fff; color: #000; padding: 8px; border-radius: 4px; margin-bottom: 6px; font-size: 11px; cursor: pointer; }
+        .modal-header { font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 6px; border-bottom: 1px solid #444; padding-bottom: 4px; }
+        .modal-item { background: #fff; color: #000; padding: 6px; border-radius: 4px; margin-bottom: 4px; font-size: 10px; cursor: pointer; }
         .modal-item:active { background: #0275d8; color: #fff; }
-        .modal-input { width: 100%; padding: 6px; font-size: 12px; margin-bottom: 8px; border-radius: 4px; border: 1px solid #ccc; color: #000; }
-        .modal-label { font-size: 10px; color: #aaa; margin-bottom: 4px; text-align: center; }
+        .modal-input { width: 100%; padding: 4px 6px; font-size: 11px; margin-bottom: 6px; border-radius: 4px; border: 1px solid #ccc; color: #000; }
+        .modal-label { font-size: 9px; color: #aaa; margin-bottom: 2px; text-align: center; }
 
-        /* Centered Default PFP Picker Grid */
+        /* Compact Default PFP Picker Grid */
         .pfp-picker {
             display: -webkit-box;
             display: -webkit-flex;
@@ -129,23 +129,23 @@
             justify-content: center;
             -webkit-flex-wrap: wrap;
             flex-wrap: wrap;
-            margin-bottom: 10px;
-            padding-bottom: 4px;
+            margin-bottom: 6px;
+            padding-bottom: 2px;
         }
         .pfp-opt {
-            width: 44px; height: 44px;
-            border-radius: 22px;
+            width: 34px; height: 34px;
+            border-radius: 17px;
             border: 2px solid #555;
-            margin: 4px;
+            margin: 2px;
             cursor: pointer;
             object-fit: cover;
             background: #111;
         }
-        .pfp-opt.selected { border-color: #4bd84b; -webkit-box-shadow: 0 0 8px #4bd84b; }
+        .pfp-opt.selected { border-color: #4bd84b; -webkit-box-shadow: 0 0 6px #4bd84b; }
 
-        .profile-view { text-align: center; margin-bottom: 10px; }
-        .profile-view img { width: 64px; height: 64px; border-radius: 32px; border: 2px solid #fff; margin: 0 auto 6px auto; display: block; object-fit: cover; }
-        .history-box { max-height: 140px; overflow-y: auto; background: #fff; border-radius: 4px; color: #000; font-size: 10px; }
+        .profile-view { text-align: center; margin-bottom: 8px; }
+        .profile-view img { width: 50px; height: 50px; border-radius: 25px; border: 2px solid #fff; margin: 0 auto 4px auto; display: block; object-fit: cover; }
+        .history-box { max-height: 110px; overflow-y: auto; background: #fff; border-radius: 4px; color: #000; font-size: 9px; }
 
         .clear { clear: both; }
     </style>
@@ -196,12 +196,12 @@
         <div class="modal-card">
             <div class="modal-header">Channel Manager</div>
             <div id="accList"></div>
-            <button class="btn-ios active" style="width:100%; padding:8px; margin-bottom:6px;" onclick="openModal('createModal')">+ Create New Channel</button>
-            <button class="btn-ios" style="width:100%; padding:6px;" onclick="closeModal('accModal')">Close</button>
+            <button class="btn-ios active" style="width:100%; padding:6px; margin-bottom:4px;" onclick="openModal('createModal')">+ Create New Channel</button>
+            <button class="btn-ios" style="width:100%; padding:5px;" onclick="closeModal('accModal')">Close</button>
         </div>
     </div>
 
-    <!-- Modal 2: Create Channel -->
+    <!-- Modal 2: Create Channel (Sized down for 3.5" Screen) -->
     <div class="modal-overlay" id="createModal">
         <div class="modal-card">
             <div class="modal-header">Create Channel</div>
@@ -214,7 +214,7 @@
             <div class="pfp-picker" id="pfpPickerRow"></div>
 
             <!-- Custom PFP Mode Toggle -->
-            <div style="text-align: center; margin: 6px 0;">
+            <div style="text-align: center; margin: 4px 0;">
                 <button type="button" class="btn-ios" id="btnTogglePfpMode" onclick="togglePfpInputMode('create')">Switch to File Upload</button>
             </div>
 
@@ -232,8 +232,8 @@
 
             <div class="modal-label">Channel Password (Optional)</div>
             <input type="password" id="cPassInput" class="modal-input" placeholder="Password">
-            <button class="btn-ios active" style="width:100%; padding:8px; margin-bottom:6px;" onclick="submitNewChannel()">Create</button>
-            <button class="btn-ios" style="width:100%; padding:6px;" onclick="closeModal('createModal')">Cancel</button>
+            <button class="btn-ios active" style="width:100%; padding:6px; margin-bottom:4px;" onclick="submitNewChannel()">Create</button>
+            <button class="btn-ios" style="width:100%; padding:5px;" onclick="closeModal('createModal')">Cancel</button>
         </div>
     </div>
 
@@ -243,8 +243,8 @@
             <div class="modal-header" id="passPromptTitle">Enter Password</div>
             <div id="passPromptSub" style="font-size:10px; color:#aaa; text-align:center; margin-bottom:8px;"></div>
             <input type="password" id="passModalInput" class="modal-input" placeholder="Password">
-            <button class="btn-ios active" style="width:100%; padding:8px; margin-bottom:6px;" onclick="submitPassModal()">Unlock</button>
-            <button class="btn-ios" style="width:100%; padding:6px;" onclick="closeModal('passModal')">Cancel</button>
+            <button class="btn-ios active" style="width:100%; padding:6px; margin-bottom:4px;" onclick="submitPassModal()">Unlock</button>
+            <button class="btn-ios" style="width:100%; padding:5px;" onclick="closeModal('passModal')">Cancel</button>
         </div>
     </div>
 
@@ -254,14 +254,14 @@
             <div class="modal-header">My Channel</div>
             <div class="profile-view">
                 <img id="profPic" src="">
-                <div id="profTitle" style="font-weight:bold; font-size:13px;"></div>
-                <div id="profHandle" style="font-size:10px; color:#aaa;"></div>
-                <div id="profCreated" style="font-size:9px; color:#888; margin-top:2px;"></div>
+                <div id="profTitle" style="font-weight:bold; font-size:12px;"></div>
+                <div id="profHandle" style="font-size:9px; color:#aaa;"></div>
+                <div id="profCreated" style="font-size:8px; color:#888; margin-top:2px;"></div>
             </div>
             <div class="section-header">Watch History</div>
             <div class="history-box" id="profHistoryList"></div>
-            <button class="btn-ios" id="profBadgeToggleBtn" style="width:100%; padding:6px; margin-top:8px; display:none;" onclick="toggleMyBadge()">Remove Admin Status</button>
-            <button class="btn-ios" style="width:100%; padding:6px; margin-top:4px;" onclick="closeModal('profileModal')">Close</button>
+            <button class="btn-ios" id="profBadgeToggleBtn" style="width:100%; padding:5px; margin-top:6px; display:none;" onclick="toggleMyBadge()">Remove Admin Status</button>
+            <button class="btn-ios" style="width:100%; padding:5px; margin-top:4px;" onclick="closeModal('profileModal')">Close</button>
         </div>
     </div>
 
@@ -281,7 +281,7 @@
             <div class="modal-item" onclick="settingToggleAutoPlay()">10. Toggle Saver Mode</div>
             <div class="modal-item" onclick="settingExportProfile()">11. View Account Metadata</div>
             <div class="modal-item" style="background:#d84b4b; color:#fff;" onclick="settingDeleteAccount()">12. Delete Current Channel</div>
-            <button class="btn-ios" style="width:100%; padding:6px; margin-top:6px;" onclick="closeModal('settingsModal')">Close Settings</button>
+            <button class="btn-ios" style="width:100%; padding:5px; margin-top:4px;" onclick="closeModal('settingsModal')">Close Settings</button>
         </div>
     </div>
 
@@ -294,7 +294,7 @@
             <div class="pfp-picker" id="editPfpPickerRow"></div>
 
             <!-- Custom PFP Mode Toggle -->
-            <div style="text-align: center; margin: 6px 0;">
+            <div style="text-align: center; margin: 4px 0;">
                 <button type="button" class="btn-ios" id="btnToggleEditPfpMode" onclick="togglePfpInputMode('edit')">Switch to File Upload</button>
             </div>
 
@@ -310,8 +310,8 @@
                 <input type="file" id="editFileInput" class="modal-input" accept="image/*" onchange="handleFileUpload(event, 'edit')">
             </div>
 
-            <button class="btn-ios active" style="width:100%; padding:8px; margin-bottom:6px;" onclick="saveSettingPfp()">Save Picture</button>
-            <button class="btn-ios" style="width:100%; padding:6px;" onclick="closeModal('editPfpModal')">Cancel</button>
+            <button class="btn-ios active" style="width:100%; padding:6px; margin-bottom:4px;" onclick="saveSettingPfp()">Save Picture</button>
+            <button class="btn-ios" style="width:100%; padding:5px;" onclick="closeModal('editPfpModal')">Cancel</button>
         </div>
     </div>
 
@@ -319,11 +319,11 @@
     <div class="modal-overlay" id="adminModal">
         <div class="modal-card">
             <div class="modal-header">Admin Suite (matt-djs-24)</div>
-            <button class="btn-ios active" style="width:100%; padding:6px; margin-bottom:6px;" onclick="adminGenerateFakes()">+ Spawn 3 Demo Channels</button>
+            <button class="btn-ios active" style="width:100%; padding:5px; margin-bottom:4px;" onclick="adminGenerateFakes()">+ Spawn 3 Demo Channels</button>
             <div class="modal-label">Channel Controls (Click to manage):</div>
             <div id="adminAccList"></div>
-            <button class="btn-ios danger" style="width:100%; padding:6px; margin-top:6px;" onclick="adminClearAll()">Clear All Accounts</button>
-            <button class="btn-ios" style="width:100%; padding:6px; margin-top:6px;" onclick="closeModal('adminModal')">Exit Admin</button>
+            <button class="btn-ios danger" style="width:100%; padding:5px; margin-top:4px;" onclick="adminClearAll()">Clear All Accounts</button>
+            <button class="btn-ios" style="width:100%; padding:5px; margin-top:4px;" onclick="closeModal('adminModal')">Exit Admin</button>
         </div>
     </div>
 
@@ -349,13 +349,13 @@
         var uploadedCustomPfp = "";
         var uploadedEditCustomPfp = "";
 
-        // Requested Default Profile Picture URLs
+        // Direct static image URLs optimized for retro iOS 5 Safari SSL compatibility
         var DEFAULT_PFPS = [
-            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages-wixmp-ed30a86b8c4ca887773594c2.wixmp.com%2Ff%2F93cb2394-db3d-4c6f-8393-d493a2aa1323%2Fdgaqbd4-f7021eed-3a60-46fe-bc56-1f63326adb1a.png%3Ftoken%3DeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzkzY2IyMzk0LWRiM2QtNGM2Zi04MzkzLWQ0OTNhMmFhMTMyM1wvZGdhcWJkNC1mNzAyMWVlZC0zYTYwLTQ2ZmUtYmM1Ni0xZjYzMzI2YWRiMWEucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.5H7yauAX4aEvhPqzrVhNJTd5Y5SoGzZouG_lNg22in8&f=1&nofb=1&ipt=55942260a5c9de8c7fb339ad9350da9f6a5a4c84d324931ccb20b18ccaa29817&ipo=images",
-            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2F736x%2F8b%2F0f%2Fd0%2F8b0fd0bd8c61d0914157a9e88cf8c02f.jpg&f=1&nofb=1&ipt=ef4589c34c8eefd03d3eb4daac80e7042601884a5a574b71ed24d50959ee2d3b&ipo=images",
-            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.asiamediajournal.com%2Fwp-content%2Fuploads%2F2022%2F11%2FMorty-Smith-PFP-For-Tiktok-696x698.jpg&f=1&nofb=1&ipt=7be47918d4ceb68f15fcc0fe714c67088eac5be394f7a421b5f298c552e9062f&ipo=images",
-            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fm.gettywallpapers.com%2Fwp-content%2Fuploads%2F2023%2F09%2FMorty-Smith-pfp.jpg&f=1&nofb=1&ipt=4cb37ae81581b0b36d6b2025302eede6fbd315d18fe0ed9e2e4d09c119a8e09a&ipo=images",
-            "https://wallpaperaccess.com/full/9088142.jpg"
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Honkai_Star_Rail_Icon.png/240px-Honkai_Star_Rail_Icon.png",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Android_home_icon.svg/240px-Android_home_icon.svg.png",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/External_link_font_awesome.svg/240px-External_link_font_awesome.svg.png",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/240px-Apple_logo_black.svg.png",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Icon_Planet.svg/240px-Icon_Planet.svg.png"
         ];
         var selectedDefaultPfp = DEFAULT_PFPS[0];
         var selectedEditDefaultPfp = DEFAULT_PFPS[0];
@@ -964,13 +964,14 @@
             xhr.send();
         }
 
+        // Updated Video Playback mechanism using native YouTube Embed URL format for iOS 5 Safari
         function playVideo(id, title) {
             activeVideoId = id;
             if (title) recordWatchHistory(id, title);
             var wrap = document.getElementById('playerWrap');
             var player = document.getElementById('ytPlayer');
             wrap.style.display = 'block';
-            player.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+            player.src = 'https://www.youtube-nocookie.com/embed/' + id + '?playsinline=1';
             window.scrollTo(0, 0);
             showComments(id);
         }
