@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="icon" href="/favicon.png" type="image/png">
     <title>FoursTube 4S</title>
     <style>
         * { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #000 url('https://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; color: #fff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 6px; }
+        body { background: #000 url('http://www.transparenttextures.com/patterns/dark-denim-3.png') repeat; color: #fff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 6px; }
         
         .header {
             background: -webkit-gradient(linear, left top, left bottom, from(#b0b9c6), color-stop(0.05, #8e9cb0), color-stop(0.5, #6d7d93), color-stop(0.51, #57677d), to(#4d5c71));
@@ -59,12 +58,12 @@
             border-color: #500;
         }
 
-        .player-wrap { width: 100%; height: 180px; background: #000; margin-bottom: 6px; display: none; border: 1px solid #444; border-radius: 6px; }
-        iframe { width: 100%; height: 100%; border: none; border-radius: 6px; }
+        /* Native Video Player Container for iOS 5 */
+        .player-wrap { width: 100%; height: 180px; background: #000; margin-bottom: 6px; display: none; border: 1px solid #444; border-radius: 6px; text-align: center; }
+        video { width: 100%; height: 100%; border-radius: 6px; background: #000; }
 
         .section-header { font-size: 11px; font-weight: bold; color: #fff; text-shadow: 0 1px 1px #000; margin: 8px 0 4px 2px; }
 
-        /* User Profile Ribbon */
         .user-bar { background: #1c222d; border: 1px solid #3b4657; border-radius: 6px; padding: 5px 6px; margin-bottom: 6px; display: -webkit-box; -webkit-box-align: center; }
         .user-clickable { display: -webkit-box; -webkit-box-align: center; -webkit-box-flex: 1; cursor: pointer; }
         .user-avatar { width: 28px; height: 28px; border-radius: 14px; margin-right: 6px; border: 1px solid #aaa; background: #555; object-fit: cover; }
@@ -72,7 +71,6 @@
         .user-handle { font-size: 8px; color: #aaa; }
         .admin-badge { background: #900c3f; color: #fff; font-size: 7px; font-weight: bold; padding: 1px 3px; border-radius: 3px; margin-left: 3px; display: inline-block; }
 
-        /* Video Lists */
         .list-container { background: #fff; border-radius: 6px; border: 1px solid #999; overflow: hidden; margin-bottom: 6px; }
         .card { padding: 6px; border-bottom: 1px solid #e0e0e0; cursor: pointer; color: #000; background: #fff; }
         .card:last-child { border-bottom: none; }
@@ -82,27 +80,23 @@
         .card-meta { font-size: 8px; color: #666; margin-top: 2px; }
         .card:active .card-meta { color: #ddd; }
 
-        /* Shorts Grid */
         .shorts-container { display: -webkit-box; overflow-x: auto; margin-bottom: 6px; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
         .short-card { width: 85px; margin-right: 5px; background: #fff; color: #000; border-radius: 6px; padding: 3px; border: 1px solid #999; cursor: pointer; }
         .short-card img { width: 100%; height: 100px; border-radius: 4px; object-fit: cover; background: #222; }
         .short-title { font-size: 8px; font-weight: bold; height: 26px; overflow: hidden; margin-top: 2px; line-height: 1.1; word-wrap: break-word; }
 
-        /* Comments Box */
         .comments-section { background: #fff; color: #000; border-radius: 6px; padding: 6px; margin-top: 6px; border: 1px solid #999; }
         .comment-item { padding: 4px 0; border-bottom: 1px solid #eee; font-size: 9px; }
         .comment-item:last-child { border-bottom: none; }
         .comment-author { font-weight: bold; color: #0275d8; }
         .comment-input { width: 68%; padding: 3px; font-size: 10px; border: 1px solid #ccc; border-radius: 3px; }
 
-        /* Skeleton Loading UI */
         .skeleton-card { padding: 6px; border-bottom: 1px solid #eee; background: #fff; }
         .sk-thumb { width: 70px; height: 46px; float: left; background: #e0e0e0; border-radius: 3px; }
         .sk-line { height: 9px; background: #e0e0e0; margin-bottom: 5px; border-radius: 2px; }
         .sk-line.short { width: 50%; }
         .sk-body { margin-left: 78px; }
 
-        /* Fixed iOS 5 Modals - Fully Scrollable & Scaled for 3.5" Screen */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.75); display: none; -webkit-box-pack: center; -webkit-box-align: center;
@@ -110,7 +104,7 @@
         }
         .modal-card {
             background: #2d3644; border: 1px solid #57677d; border-radius: 6px;
-            width: 100%; max-width: 290px; max-height: 65vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+            width: 100%; max-width: 290px; max-height: 60vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
             padding: 8px; -webkit-box-shadow: 0 4px 15px rgba(0,0,0,0.8); color: #fff;
         }
         .modal-header { font-size: 12px; font-weight: bold; text-align: center; margin-bottom: 6px; border-bottom: 1px solid #444; padding-bottom: 4px; }
@@ -119,7 +113,6 @@
         .modal-input { width: 100%; padding: 4px; font-size: 11px; margin-bottom: 6px; border-radius: 4px; border: 1px solid #ccc; color: #000; }
         .modal-label { font-size: 9px; color: #aaa; margin-bottom: 2px; text-align: center; }
 
-        /* Compact Default PFP Picker Grid */
         .pfp-picker {
             display: -webkit-box;
             display: -webkit-flex;
@@ -155,7 +148,6 @@
         <h1>FoursTube 4S</h1>
     </div>
 
-    <!-- User Profile Bar -->
     <div class="user-bar" id="userBar">
         <div class="user-clickable" onclick="openChannelProfile()">
             <img class="user-avatar" id="uAvatar" src="">
@@ -176,8 +168,12 @@
         <a href="index.html" class="btn-ios" style="text-decoration:none;">Home</a>
     </div>
 
+    <!-- HTML5 Video Player Native to iOS 5 QuickTime -->
     <div id="playerWrap" class="player-wrap">
-        <iframe id="ytPlayer" src="" allowfullscreen></iframe>
+        <video id="nativePlayer" controls autoplay playsinline preload="metadata">
+            <source id="videoSource" src="" type="video/mp4">
+            Your iOS version cannot stream this video format directly.
+        </video>
     </div>
 
     <form class="search-box" onsubmit="doSearch(event)">
@@ -218,7 +214,7 @@
 
             <div id="pfpUrlGroup">
                 <div class="modal-label">PFP Image Link</div>
-                <input type="text" id="cPfpInput" class="modal-input" placeholder="https://...">
+                <input type="text" id="cPfpInput" class="modal-input" placeholder="http://...">
             </div>
 
             <div id="pfpFileGroup" style="display:none;">
@@ -244,7 +240,7 @@
         </div>
     </div>
 
-    <!-- Modal 4: Channel Profile Page -->
+    <!-- Modal 4: Profile -->
     <div class="modal-overlay" id="profileModal">
         <div class="modal-card">
             <div class="modal-header">My Channel</div>
@@ -261,7 +257,7 @@
         </div>
     </div>
 
-    <!-- Modal 5: Settings Menu -->
+    <!-- Modal 5: Settings -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-card">
             <div class="modal-header">Channel Settings</div>
@@ -281,7 +277,7 @@
         </div>
     </div>
 
-    <!-- Modal 5.5: Edit PFP Modal -->
+    <!-- Modal 5.5: Edit PFP -->
     <div class="modal-overlay" id="editPfpModal">
         <div class="modal-card">
             <div class="modal-header">Change Profile Picture</div>
@@ -294,7 +290,7 @@
 
             <div id="editPfpUrlGroup">
                 <div class="modal-label">Or PFP Image Link</div>
-                <input type="text" id="editPfpInput" class="modal-input" placeholder="https://...">
+                <input type="text" id="editPfpInput" class="modal-input" placeholder="http://...">
             </div>
 
             <div id="editPfpFileGroup" style="display:none;">
@@ -341,13 +337,13 @@
         var uploadedCustomPfp = "";
         var uploadedEditCustomPfp = "";
 
-        // Standard static images natively supported by vintage Safari SSL
+        // Unencrypted HTTP & retro-friendly SVG/PNG profile picture fallbacks for iOS 5
         var DEFAULT_PFPS = [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Android_home_icon.svg/240px-Android_home_icon.svg.png",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/240px-Apple_logo_black.svg.png",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/External_link_font_awesome.svg/240px-External_link_font_awesome.svg.png",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Icon_Planet.svg/240px-Icon_Planet.svg.png",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Honkai_Star_Rail_Icon.png/240px-Honkai_Star_Rail_Icon.png"
+            "http://upload.wikimedia.org/wikipedia/commons/d/d7/Android_home_icon.svg",
+            "http://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+            "http://upload.wikimedia.org/wikipedia/commons/6/6a/External_link_font_awesome.svg",
+            "http://upload.wikimedia.org/wikipedia/commons/7/7b/Icon_Planet.svg",
+            "http://upload.wikimedia.org/wikipedia/commons/0/05/Honkai_Star_Rail_Icon.png"
         ];
         var selectedDefaultPfp = DEFAULT_PFPS[0];
         var selectedEditDefaultPfp = DEFAULT_PFPS[0];
@@ -746,7 +742,6 @@
             renderView();
         }
 
-        // Settings Actions
         function settingChangeName() {
             var accs = getAccounts(); var idx = getActiveAccIndex();
             var n = prompt("Enter new Channel Name:", accs[idx].name);
@@ -802,7 +797,6 @@
             renderView();
         }
 
-        // Admin Panel Controls
         function openAdminPanel() {
             var accs = getAccounts();
             var cur = accs[getActiveAccIndex()] || accs[0];
@@ -956,16 +950,23 @@
             xhr.send();
         }
 
-        // Updated Video Playback handler formatted for iOS 5 WebKit compatibility
+        // Updated Video Playback Handler specifically designed for iOS 5 Native H.264 Playback
         function playVideo(id, title) {
             activeVideoId = id;
             if (title) recordWatchHistory(id, title);
             var wrap = document.getElementById('playerWrap');
-            var player = document.getElementById('ytPlayer');
+            var player = document.getElementById('nativePlayer');
+            var source = document.getElementById('videoSource');
+            
             wrap.style.display = 'block';
             
-            // Standard HTML5 YouTube iframe embed parameters tailored for iOS 5 Safari handoff
-            player.src = 'https://www.youtube.com/embed/' + id + '?playsinline=1&rel=0&enablejsapi=1';
+            // Invidious / Piped proxy stream URL format for vintage iOS native QuickTime player compatibility
+            var streamUrl = 'https://inv.tux.pizza/latest_version?id=' + id + '&itag=18';
+            
+            source.src = streamUrl;
+            player.load();
+            player.play();
+            
             window.scrollTo(0, 0);
             showComments(id);
         }
@@ -1063,7 +1064,7 @@
                     card.className = 'card';
                     card.onclick = (function(vId, vTitle){ return function(){ playVideo(vId, vTitle); }; })(item.id, item.title);
                     card.innerHTML = 
-                        '<img src="https://img.youtube.com/vi/' + item.id + '/hqdefault.jpg">' +
+                        '<img src="http://img.youtube.com/vi/' + item.id + '/hqdefault.jpg">' +
                         '<div>' +
                             '<div class="card-title">' + item.title + '</div>' +
                             '<div class="card-meta"><b>' + item.creator + '</b> • ' + item.views + '</div>' +
