@@ -964,23 +964,39 @@
         }
 
         function playVideo(id, title) {
-            activeVideoId = id;
-            if (title) recordWatchHistory(id, title);
-            var wrap = document.getElementById('playerWrap');
-            var player = document.getElementById('nativePlayer');
-            var source = document.getElementById('videoSource');
-            
-            wrap.style.display = 'block';
-            
-            var localProxyUrl = 'http://192.168.1.19:5000/stream/' + id;
-            
-            source.src = localProxyUrl;
-            player.load();
-            player.play();
-            
-            window.scrollTo(0, 0);
-            showComments(id);
-        }
+    activeVideoId = id;
+    if (title) recordWatchHistory(id, title);
+    
+    var wrap = document.getElementById('playerWrap');
+    var player = document.getElementById('nativePlayer');
+    var source = document.getElementById('videoSource');
+    
+    // 1. Show the player wrapper FIRST so WebKit registers the element
+    wrap.style.display = 'block';
+    
+    // 2. Set the stream URL (pointing to your working Python server)
+    var localProxyUrl = 'http://192.168.1.19:5000/stream/' + id;
+    
+    // 3. Update both the source element AND the player src directly for vintage Safari
+    source.src = localProxyUrl;
+    player.src = localProxyUrl;
+    
+    // 4. Force iOS 5 QuickTime to reload media buffer
+    player.load();
+    
+    // 5. Scroll up to the player
+    window.scrollTo(0, 0);
+    
+    // 6. Attempt play, but display a manual tap fallback if iOS blocks autostart
+    var playPromise = player.play();
+    if (playPromise !== undefined) {
+        playPromise.catch(function() {
+            document.getElementById('status').innerHTML = 'Tap the video player above to start playback.';
+        });
+    }
+    
+    showComments(id);
+}
 
         function showComments(vid) {
             var existing = document.getElementById('commentBlock');
