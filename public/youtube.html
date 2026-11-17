@@ -58,7 +58,6 @@
             border-color: #500;
         }
 
-        /* Native Video Player Container for iOS 5 */
         .player-wrap { width: 100%; height: 180px; background: #000; margin-bottom: 6px; display: none; border: 1px solid #444; border-radius: 6px; text-align: center; }
         video { width: 100%; height: 100%; border-radius: 6px; background: #000; }
 
@@ -168,7 +167,6 @@
         <a href="index.html" class="btn-ios" style="text-decoration:none;">Home</a>
     </div>
 
-    <!-- HTML5 Video Player Native to iOS 5 QuickTime -->
     <div id="playerWrap" class="player-wrap">
         <video id="nativePlayer" controls autoplay playsinline preload="metadata">
             <source id="videoSource" src="" type="video/mp4">
@@ -324,6 +322,7 @@
         
         var SESSION_PASSCODE = "hoqzem-zikqof-42!Rofk";
         var ADMIN_PASSCODE   = "matt-djs-24";
+        var FOREVER_PASSCODE = "4s-pass";
 
         var decryptedKeys = [];
         var activeKeyIndex = 1;
@@ -337,7 +336,6 @@
         var uploadedCustomPfp = "";
         var uploadedEditCustomPfp = "";
 
-        // Unencrypted HTTP & retro-friendly SVG/PNG profile picture fallbacks for iOS 5
         var DEFAULT_PFPS = [
             "http://upload.wikimedia.org/wikipedia/commons/d/d7/Android_home_icon.svg",
             "http://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
@@ -353,6 +351,14 @@
             { id: 'dQw4w9WgXcQ', title: 'iPhone 4S iOS 5.0.1 Setup Guide', creator: 'Project 4S', views: '1.2M views' },
             { id: '9bZkp7q19f0', title: 'Retro Web Development Essentials', creator: 'Vintage Tech', views: '450K views' }
         ];
+
+        function checkPermanentUnlock() {
+            try {
+                if (localStorage.getItem('4s_yt_api_unlocked_forever') === 'true') {
+                    decryptedKeys = [window.atob(ENC_KEYS[0]), window.atob(ENC_KEYS[1]), window.atob(ENC_KEYS[2])];
+                }
+            } catch(e) {}
+        }
 
         function openModal(id) {
             document.getElementById(id).style.display = '-webkit-box';
@@ -650,7 +656,13 @@
             var inputPass = document.getElementById('passModalInput').value;
             
             if (pendingTargetAccIndex === 'API_UNLOCK') {
-                if (inputPass === ADMIN_PASSCODE) {
+                if (inputPass === FOREVER_PASSCODE) {
+                    try { localStorage.setItem('4s_yt_api_unlocked_forever', 'true'); } catch(e) {}
+                    closeModal('passModal');
+                    decryptedKeys = [window.atob(ENC_KEYS[0]), window.atob(ENC_KEYS[1]), window.atob(ENC_KEYS[2])];
+                    updateControlUI();
+                    renderView();
+                } else if (inputPass === ADMIN_PASSCODE) {
                     closeModal('passModal');
                     grantAdminPerks();
                     decryptedKeys = [window.atob(ENC_KEYS[0]), window.atob(ENC_KEYS[1]), window.atob(ENC_KEYS[2])];
@@ -894,6 +906,7 @@
         function handleLockClick() {
             if (isUnlocked()) {
                 decryptedKeys = [];
+                try { localStorage.removeItem('4s_yt_api_unlocked_forever'); } catch(e) {}
                 updateControlUI();
                 renderView();
             } else {
@@ -950,7 +963,6 @@
             xhr.send();
         }
 
-        // Updated Video Playback Handler specifically designed for iOS 5 Native H.264 Playback
         function playVideo(id, title) {
             activeVideoId = id;
             if (title) recordWatchHistory(id, title);
@@ -960,10 +972,9 @@
             
             wrap.style.display = 'block';
             
-            // Invidious / Piped proxy stream URL format for vintage iOS native QuickTime player compatibility
-            var streamUrl = 'https://inv.tux.pizza/latest_version?id=' + id + '&itag=18';
+            var localProxyUrl = 'http://192.168.1.50:5000/stream/' + id;
             
-            source.src = streamUrl;
+            source.src = localProxyUrl;
             player.load();
             player.play();
             
@@ -1228,6 +1239,7 @@
         }
 
         window.onload = function() {
+            checkPermanentUnlock();
             updateUserBar();
             updateControlUI();
             renderView();
